@@ -79,6 +79,7 @@ class Win32RawInput(keyEventListener: KeyEventListener) {
 
             keyEventListener.eventOccurred(
               raw.data.keyboard.Message.intValue() match {
+                case 261 /* ??? */ => KEY_PRESSED
                 case 260 /* ??? */ => KEY_PRESSED
                 case WM_KEYDOWN => KEY_PRESSED
                 case WM_KEYUP => KEY_RELEASED

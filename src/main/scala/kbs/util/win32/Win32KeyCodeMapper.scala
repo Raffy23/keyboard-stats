@@ -12,13 +12,15 @@ object Win32KeyCodeMapper {
   import WindowsVKKeyCodes._
 
   def map(keyCode: Int): KeyCode = keyCode match {
+    case VK_BACK => KeyCode.BACK_SPACE
     case VK_TAB => KeyCode.TAB
     case VK_CLEAR => KeyCode.CLEAR
     case VK_RETURN => KeyCode.ENTER
+    case VK_APPS => KeyCode.CONTEXT_MENU
 
     case VK_SHIFT => KeyCode.SHIFT
     case VK_CONTROL => KeyCode.CONTROL
-    case VK_MENU => KeyCode.CONTEXT_MENU
+    case VK_MENU => KeyCode.ALT
     case VK_PAUSE => KeyCode.PAUSE
     case VK_CAPITAL => KeyCode.CAPS
     case VK_KANA => KeyCode.KANA
@@ -134,6 +136,26 @@ object Win32KeyCodeMapper {
     case VK_RCONTROL => KeyCode.CONTROL
     case VK_LMENU => KeyCode.WINDOWS
     case VK_RMENU => KeyCode.WINDOWS
+
+    case VK_OEM1 => KeyCode.COLON
+    case VK_OEM2 => KeyCode.SLASH
+    case VK_OEM3 => KeyCode.BACK_QUOTE
+    case VK_OEM4 => KeyCode.OPEN_BRACKET
+    case VK_OEM5 => KeyCode.BACK_SLASH
+    case VK_OEM6 => KeyCode.CLOSE_BRACKET
+    case VK_OEM7 => KeyCode.QUOTE
+    case VK_OEM102 => KeyCode.LESS
+
+    case VK_CIRCUMFLEX => KeyCode.CIRCUMFLEX
+
+    case VK_OEM_MINUS => KeyCode.MINUS
+    case VK_OEM_PLUS => KeyCode.PLUS
+    case VK_OEM_COMMA => KeyCode.COMMA
+    case VK_OEM_PERIOD => KeyCode.PERIOD
+
+    case VK_PRIOR => KeyCode.PAGE_UP
+
+    case x => System.err.println(s"Unknwon VK_* KeyCode '0x${x.toHexString.toUpperCase}'"); KeyCode.UNDEFINED
   }
 
   protected object WindowsVKKeyCodes {
@@ -271,6 +293,22 @@ object Win32KeyCodeMapper {
     val VK_RCONTROL = 0xA3
     val VK_LMENU = 0xA4
     val VK_RMENU = 0xA5
+
+    val VK_OEM1 = 0xBA
+    val VK_OEM2 = 0xBF
+    val VK_OEM3 = 0xC0
+    val VK_OEM4 = 0xDB
+    val VK_OEM5 = 0xDC
+    val VK_OEM6 = 0xDD
+    val VK_OEM7 = 0xDE
+    val VK_OEM102 = 0xE2
+
+    val VK_CIRCUMFLEX = 220
+
+    val VK_OEM_PLUS	 = 0xBB
+    val VK_OEM_COMMA = 0xBC
+    val VK_OEM_MINUS = 0xBD
+    val VK_OEM_PERIOD = 0xBE
   }
 
 }
