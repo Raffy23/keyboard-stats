@@ -1,6 +1,8 @@
 package kbs.util
 
+import javafx.scene.input.KeyCode
 import kbs.util.KeyEventListener.KeyEventType
+
 
 /**
   * Created by: 
@@ -9,7 +11,7 @@ import kbs.util.KeyEventListener.KeyEventType
   * @version 11.07.2018
   */
 abstract class KeyEventListener {
-  def eventOccurred(event: KeyEventType, keyCode: Int): Unit
+  def eventOccurred(event: KeyEventType, keyCode: KeyCode): Unit
 }
 
 object KeyEventListener {

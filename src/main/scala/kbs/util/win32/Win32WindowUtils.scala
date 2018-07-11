@@ -40,7 +40,7 @@ object Win32WindowUtils {
       if (process == null)
         throw new Win32Exception(GetLastError())
 
-      val buffer = new Array[Char](MAX_TITLE_LENGTH )
+      val buffer = new Array[Char](MAX_TITLE_LENGTH)
       GetModuleBaseNameW(process, null, buffer, MAX_TITLE_LENGTH)
 
       buffer.mkString

@@ -9,6 +9,8 @@ import kbs.util.KeyEventListener
 import kbs.util.KeyEventListener.{KEY_PRESSED, KEY_RELEASED}
 import kbs.util.win32.jna.{RAWINPUT, RAWINPUTDEVICE, RAWINPUTHEADER, User32Lib}
 
+import scala.language.implicitConversions
+
 /**
   * Created by:
   * @author Raphael
@@ -81,7 +83,7 @@ class Win32RawInput(keyEventListener: KeyEventListener) {
                 case WM_KEYDOWN => KEY_PRESSED
                 case WM_KEYUP => KEY_RELEASED
               },
-              raw.data.keyboard.VKey.intValue()
+              Win32KeyCodeMapper.map(raw.data.keyboard.VKey.intValue())
             )
 
           case RIM_TYPEMOUSE => println("Mouse Events are not implemented")
