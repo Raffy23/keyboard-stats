@@ -28,7 +28,7 @@ object Win32WindowUtils {
   def getActiveWindowTitle: String = {
       val buffer = new Array[Char](MAX_TITLE_LENGTH)
       GetWindowText(GetForegroundWindow(), buffer, MAX_TITLE_LENGTH)
-
+      
       buffer.mkString
   }
 
@@ -42,6 +42,8 @@ object Win32WindowUtils {
 
       val buffer = new Array[Char](MAX_TITLE_LENGTH)
       GetModuleBaseNameW(process, null, buffer, MAX_TITLE_LENGTH)
+
+      CloseHandle(process)
 
       buffer.mkString
   }
