@@ -1,7 +1,7 @@
 package his
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, OutputStreamWriter}
-import java.util.concurrent.{ScheduledFuture, ScheduledThreadPoolExecutor, TimeUnit}
+import java.util.concurrent.{ConcurrentHashMap, ScheduledFuture, ScheduledThreadPoolExecutor, TimeUnit}
 
 import com.jfoenix.controls.JFXTabPane
 import de.jensd.fx.glyphs.fontawesome.{FontAwesomeIcon, FontAwesomeIconView}
@@ -9,15 +9,16 @@ import his.service.{InputGatherer, KeyboardLayoutService}
 import his.util.{BufferedImageTranscoder, HeatmapGenerator}
 import javafx.animation.{KeyFrame, Timeline}
 import org.apache.batik.transcoder.TranscoderInput
-import scalafx.application.{JFXApp, Platform}
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.application.{JFXApp, Platform}
+import scalafx.collections.ObservableBuffer
 import scalafx.embed.swing.SwingFXUtils
 import scalafx.geometry.Side
 import scalafx.scene.control.TabPane.TabClosingPolicy
-import scalafx.scene.control.{Label, Tab, TabPane, Tooltip}
+import scalafx.scene.control._
 import scalafx.scene.image.ImageView
+import scalafx.scene.layout.{AnchorPane, BorderPane}
 import scalafx.scene.{Node, Scene}
-import scalafx.scene.layout.AnchorPane
 import scalafx.util.Duration
 
 import scala.language.implicitConversions
@@ -67,6 +68,9 @@ object Main extends JFXApp {
   val kbImageView = new ImageView()
   kbImageView.preserveRatio = true
 
+  val appEntries = ObservableBuffer("All")
+  var selectedItem = 0
+
   InputGatherer.globalKeyListener.start()
 
   stage = new PrimaryStage {
@@ -78,7 +82,7 @@ object Main extends JFXApp {
     minWidth = 800
     minHeight = 600
 
-    scene = new Scene {
+    scene = new Scene(800, 600) {
       content = new AnchorPane {
         val tabPane = new TabPane
 
@@ -86,25 +90,49 @@ object Main extends JFXApp {
         tabPane.setTabClosingPolicy(TabClosingPolicy.Unavailable)
         tabPane.setRotateGraphic(false)
 
-        AnchorPane.setAnchors(tabPane, 0, 0, 0, 0)
-
         val keyboardTab = new Tab
         keyboardTab.graphic = FontAwesomeIcon.KEYBOARD_ALT.toIcon
         keyboardTab.tooltip = new Tooltip("Keyboard").setDelay(250)
         keyboardTab.closable = false
 
-        keyboardTab.content = kbImageView
+        keyboardTab.content = new AnchorPane {
+          val selector: ListView[String] = new ListView[String] {
+            items = appEntries
+            editable = false
+            selectionModel().selectedIndexProperty().addListener(
+              (_, _, newValue) => {
+                if (newValue.intValue() > 0)
+                  transformer.putIfAbsent(newValue.intValue(), new HeatmapGenerator(KeyboardLayoutService.layouts("qwerty"), InputGatherer.apps(appEntries(newValue.intValue()))))
+
+                selectedItem = newValue.intValue()
+              }
+            )
+          }
+
+          selector.setPrefWidth(100)
+
+          AnchorPane.setTopAnchor(selector, 0)
+          AnchorPane.setBottomAnchor(selector, 0)
+          AnchorPane.setLeftAnchor(selector, 0)
+
+          AnchorPane.setAnchors(kbImageView, 0, 5, 0, 105)
+
+          children.addAll(selector, kbImageView)
+        }
 
         val settingsTab = new Tab
         settingsTab.graphic = FontAwesomeIcon.GEARS.toIcon
         settingsTab.tooltip = new Tooltip("Settings").setDelay(250)
         settingsTab.closable = false
 
-        settingsTab.content = new Label("Keyboard Tab")
-
+        settingsTab.content = new BorderPane {
+          center = new Label("Keyboard Tab")
+        }
 
         tabPane.getTabs.addAll(keyboardTab, settingsTab)
-        children.addAll(tabPane)
+
+        AnchorPane.setAnchors(tabPane, 0, 0, 0, 0)
+        children.add(tabPane)
       }
     }
   }
@@ -114,9 +142,11 @@ object Main extends JFXApp {
   }
 
   val ex = new ScheduledThreadPoolExecutor(1)
-  val transformer = new HeatmapGenerator(KeyboardLayoutService.layouts("qwerty"), InputGatherer.all)
+  val transformer = new ConcurrentHashMap[Int, HeatmapGenerator]()
+  transformer.put(0, new HeatmapGenerator(KeyboardLayoutService.layouts("qwerty"), InputGatherer.all))
+
   val kbRefresher: ScheduledFuture[_] = ex.scheduleAtFixedRate(() => try {
-    val heatmap = transformer.transform()
+    val heatmap = transformer.get(selectedItem).transform()
 
     val byteOut = new ByteArrayOutputStream()
     val byteWriter = new OutputStreamWriter(byteOut)
@@ -126,7 +156,7 @@ object Main extends JFXApp {
 
     //XML.save("./output.svg", heatmap.head)
 
-    val t = new BufferedImageTranscoder(stage.width.value.toFloat, stage.height.value.toFloat)
+    val t = new BufferedImageTranscoder(stage.width.value.toFloat - 155, stage.height.value.toFloat)
     val byteIn = new ByteArrayInputStream(byteOut.toByteArray)
     val in = new TranscoderInput(byteIn)
 
@@ -134,14 +164,26 @@ object Main extends JFXApp {
 
     Platform.runLater(() => {
       kbImageView.image = SwingFXUtils.toFXImage(t.getImage, null)
-      kbImageView.fitWidth = stage.width.value
-      kbImageView.fitHeight = stage.width.value
+
+      kbImageView.fitWidth = stage.width.value - 155
+      kbImageView.fitHeight = stage.height.value
     })
 
   } catch { case ex: Exception => ex.printStackTrace() }, 1, 750, TimeUnit.MILLISECONDS)
 
+  val appListRefresher: ScheduledFuture[_] = ex.scheduleAtFixedRate(() => try {
+    Platform.runLater(() => {
+      InputGatherer.apps.keys.foreach(app => {
+        if(!appEntries.contains(app))
+          appEntries += app
+      })
+    })
+  } catch { case ex: Exception => ex.printStackTrace() }, 1000, 500, TimeUnit.MILLISECONDS)
+
+
   def shutdown(): Unit = {
     kbRefresher.cancel(true)
+    appListRefresher.cancel(true)
     ex.shutdown()
 
     InputGatherer.globalKeyListener.destroy()
