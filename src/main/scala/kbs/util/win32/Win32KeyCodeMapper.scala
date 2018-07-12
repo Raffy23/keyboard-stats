@@ -1,6 +1,6 @@
 package kbs.util.win32
 
-import javafx.scene.input.KeyCode
+import java.awt.event.KeyEvent
 
 /**
   * Created by: 
@@ -9,156 +9,155 @@ import javafx.scene.input.KeyCode
   * @version 11.07.2018
   */
 object Win32KeyCodeMapper {
-  import WindowsVKKeyCodes._
+  import Win32KeyCodeMapper._
 
-  def map(keyCode: Int): KeyCode = keyCode match {
-    case VK_BACK => KeyCode.BACK_SPACE
-    case VK_TAB => KeyCode.TAB
-    case VK_CLEAR => KeyCode.CLEAR
-    case VK_RETURN => KeyCode.ENTER
-    case VK_APPS => KeyCode.CONTEXT_MENU
+  def map(keyCode: Int): Int = keyCode match {
+    case VK_BACK => KeyEvent.VK_BACK_SPACE
+    case VK_TAB => KeyEvent.VK_TAB
+    case VK_CLEAR => KeyEvent.VK_CLEAR
+    case VK_RETURN => KeyEvent.VK_ENTER
+    case VK_APPS => KeyEvent.VK_CONTEXT_MENU
 
-    case VK_SHIFT => KeyCode.SHIFT
-    case VK_CONTROL => KeyCode.CONTROL
-    case VK_MENU => KeyCode.ALT
-    case VK_PAUSE => KeyCode.PAUSE
-    case VK_CAPITAL => KeyCode.CAPS
-    case VK_KANA => KeyCode.KANA
+    case VK_SHIFT => KeyEvent.VK_SHIFT
+    case VK_CONTROL => KeyEvent.VK_CONTROL
+    case VK_MENU => KeyEvent.VK_ALT
+    case VK_PAUSE => KeyEvent.VK_PAUSE
+    case VK_CAPITAL => KeyEvent.VK_CAPS_LOCK
+    case VK_KANA => KeyEvent.VK_KANA
 
-    case VK_ESCAPE => KeyCode.ESCAPE
-    case VK_CONVERT => KeyCode.CONVERT
-    case VK_NONCONVERT => KeyCode.NONCONVERT
-    case VK_ACCEPT => KeyCode.ACCEPT
-    case VK_MODECHANGE => KeyCode.MODECHANGE
+    case VK_ESCAPE => KeyEvent.VK_ESCAPE
+    case VK_CONVERT => KeyEvent.VK_CONVERT
+    case VK_NONCONVERT => KeyEvent.VK_NONCONVERT
+    case VK_ACCEPT => KeyEvent.VK_ACCEPT
+    case VK_MODECHANGE => KeyEvent.VK_MODECHANGE
 
-    case VK_SPACE => KeyCode.SPACE
-    case VK_NEXT => KeyCode.TRACK_NEXT
-    case VK_END => KeyCode.END
-    case VK_HOME => KeyCode.HOME
-    case VK_LEFT => KeyCode.LEFT
-    case VK_UP => KeyCode.UP
-    case VK_RIGHT => KeyCode.RIGHT
-    case VK_DOWN => KeyCode.DOWN
-    case VK_PRINT => KeyCode.PRINTSCREEN
-    case VK_INSERT => KeyCode.INSERT
-    case VK_DELETE => KeyCode.DELETE
-    case VK_HELP => KeyCode.HELP
+    case VK_SPACE => KeyEvent.VK_SPACE
+    case VK_END => KeyEvent.VK_END
+    case VK_HOME => KeyEvent.VK_HOME
+    case VK_LEFT => KeyEvent.VK_LEFT
+    case VK_UP => KeyEvent.VK_UP
+    case VK_RIGHT => KeyEvent.VK_RIGHT
+    case VK_DOWN => KeyEvent.VK_DOWN
+    case VK_PRINT => KeyEvent.VK_PRINTSCREEN
+    case VK_INSERT => KeyEvent.VK_INSERT
+    case VK_DELETE => KeyEvent.VK_DELETE
+    case VK_HELP => KeyEvent.VK_HELP
 
-    case VK_KEY_0 => KeyCode.DIGIT0
-    case VK_KEY_1 => KeyCode.DIGIT1
-    case VK_KEY_2 => KeyCode.DIGIT2
-    case VK_KEY_3 => KeyCode.DIGIT3
-    case VK_KEY_4 => KeyCode.DIGIT4
-    case VK_KEY_5 => KeyCode.DIGIT5
-    case VK_KEY_6 => KeyCode.DIGIT6
-    case VK_KEY_7 => KeyCode.DIGIT7
-    case VK_KEY_8 => KeyCode.DIGIT8
-    case VK_KEY_9 => KeyCode.DIGIT9
+    case VK_KEY_0 => KeyEvent.VK_0
+    case VK_KEY_1 => KeyEvent.VK_1
+    case VK_KEY_2 => KeyEvent.VK_2
+    case VK_KEY_3 => KeyEvent.VK_3
+    case VK_KEY_4 => KeyEvent.VK_4
+    case VK_KEY_5 => KeyEvent.VK_5
+    case VK_KEY_6 => KeyEvent.VK_6
+    case VK_KEY_7 => KeyEvent.VK_7
+    case VK_KEY_8 => KeyEvent.VK_8
+    case VK_KEY_9 => KeyEvent.VK_9
 
-    case VK_KEY_A => KeyCode.A
-    case VK_KEY_B => KeyCode.B
-    case VK_KEY_C => KeyCode.C
-    case VK_KEY_D => KeyCode.D
-    case VK_KEY_E => KeyCode.E
-    case VK_KEY_F => KeyCode.F
-    case VK_KEY_G => KeyCode.G
-    case VK_KEY_H => KeyCode.H
-    case VK_KEY_I => KeyCode.I
-    case VK_KEY_J => KeyCode.J
-    case VK_KEY_K => KeyCode.K
-    case VK_KEY_L => KeyCode.L
-    case VK_KEY_M => KeyCode.M
-    case VK_KEY_N => KeyCode.N
-    case VK_KEY_O => KeyCode.O
-    case VK_KEY_P => KeyCode.P
-    case VK_KEY_Q => KeyCode.Q
-    case VK_KEY_R => KeyCode.R
-    case VK_KEY_S => KeyCode.S
-    case VK_KEY_T => KeyCode.T
-    case VK_KEY_U => KeyCode.U
-    case VK_KEY_V => KeyCode.V
-    case VK_KEY_W => KeyCode.W
-    case VK_KEY_X => KeyCode.X
-    case VK_KEY_Y => KeyCode.Y
-    case VK_KEY_Z => KeyCode.Z
+    case VK_KEY_A => KeyEvent.VK_A
+    case VK_KEY_B => KeyEvent.VK_B
+    case VK_KEY_C => KeyEvent.VK_C
+    case VK_KEY_D => KeyEvent.VK_D
+    case VK_KEY_E => KeyEvent.VK_E
+    case VK_KEY_F => KeyEvent.VK_F
+    case VK_KEY_G => KeyEvent.VK_G
+    case VK_KEY_H => KeyEvent.VK_H
+    case VK_KEY_I => KeyEvent.VK_I
+    case VK_KEY_J => KeyEvent.VK_J
+    case VK_KEY_K => KeyEvent.VK_K
+    case VK_KEY_L => KeyEvent.VK_L
+    case VK_KEY_M => KeyEvent.VK_M
+    case VK_KEY_N => KeyEvent.VK_N
+    case VK_KEY_O => KeyEvent.VK_O
+    case VK_KEY_P => KeyEvent.VK_P
+    case VK_KEY_Q => KeyEvent.VK_Q
+    case VK_KEY_R => KeyEvent.VK_R
+    case VK_KEY_S => KeyEvent.VK_S
+    case VK_KEY_T => KeyEvent.VK_T
+    case VK_KEY_U => KeyEvent.VK_U
+    case VK_KEY_V => KeyEvent.VK_V
+    case VK_KEY_W => KeyEvent.VK_W
+    case VK_KEY_X => KeyEvent.VK_X
+    case VK_KEY_Y => KeyEvent.VK_Y
+    case VK_KEY_Z => KeyEvent.VK_Z
 
-    case VK_LWIN => KeyCode.WINDOWS
-    case VK_RWIN => KeyCode.WINDOWS
+    case VK_LWIN => KeyEvent.VK_WINDOWS
+    case VK_RWIN => KeyEvent.VK_WINDOWS
 
-    case VK_NUMPAD0 => KeyCode.NUMPAD0
-    case VK_NUMPAD1 => KeyCode.NUMPAD1
-    case VK_NUMPAD2 => KeyCode.NUMPAD2
-    case VK_NUMPAD3 => KeyCode.NUMPAD3
-    case VK_NUMPAD4 => KeyCode.NUMPAD4
-    case VK_NUMPAD5 => KeyCode.NUMPAD5
-    case VK_NUMPAD6 => KeyCode.NUMPAD6
-    case VK_NUMPAD7 => KeyCode.NUMPAD7
-    case VK_NUMPAD8 => KeyCode.NUMPAD8
-    case VK_NUMPAD9 => KeyCode.NUMPAD9
+    case VK_NUMPAD0 => KeyEvent.VK_NUMPAD0
+    case VK_NUMPAD1 => KeyEvent.VK_NUMPAD1
+    case VK_NUMPAD2 => KeyEvent.VK_NUMPAD2
+    case VK_NUMPAD3 => KeyEvent.VK_NUMPAD3
+    case VK_NUMPAD4 => KeyEvent.VK_NUMPAD4
+    case VK_NUMPAD5 => KeyEvent.VK_NUMPAD5
+    case VK_NUMPAD6 => KeyEvent.VK_NUMPAD6
+    case VK_NUMPAD7 => KeyEvent.VK_NUMPAD7
+    case VK_NUMPAD8 => KeyEvent.VK_NUMPAD8
+    case VK_NUMPAD9 => KeyEvent.VK_NUMPAD9
 
-    case VK_MULTIPLY => KeyCode.MULTIPLY
-    case VK_ADD => KeyCode.ADD
-    case VK_SEPARATOR => KeyCode.SEPARATOR
-    case VK_SUBTRACT => KeyCode.SUBTRACT
-    case VK_DECIMAL => KeyCode.DECIMAL
-    case VK_DIVIDE => KeyCode.DIVIDE
+    case VK_MULTIPLY => KeyEvent.VK_MULTIPLY
+    case VK_ADD => KeyEvent.VK_ADD
+    case VK_SEPARATOR => KeyEvent.VK_SEPARATOR
+    case VK_SUBTRACT => KeyEvent.VK_SUBTRACT
+    case VK_DECIMAL => KeyEvent.VK_DECIMAL
+    case VK_DIVIDE => KeyEvent.VK_DIVIDE
 
-    case VK_F1 => KeyCode.F1
-    case VK_F2 => KeyCode.F2
-    case VK_F3 => KeyCode.F3
-    case VK_F4 => KeyCode.F4
-    case VK_F5 => KeyCode.F5
-    case VK_F6 => KeyCode.F5
-    case VK_F7 => KeyCode.F6
-    case VK_F8 => KeyCode.F7
-    case VK_F9 => KeyCode.F8
-    case VK_F10 => KeyCode.F10
-    case VK_F11 => KeyCode.F11
-    case VK_F12 => KeyCode.F12
-    case VK_F13 => KeyCode.F13
-    case VK_F14 => KeyCode.F14
-    case VK_F15 => KeyCode.F15
-    case VK_F16 => KeyCode.F16
-    case VK_F17 => KeyCode.F17
-    case VK_F18 => KeyCode.F18
-    case VK_F19 => KeyCode.F19
-    case VK_F20 => KeyCode.F20
-    case VK_F21 => KeyCode.F21
-    case VK_F22 => KeyCode.F22
-    case VK_F23 => KeyCode.F23
-    case VK_F24 => KeyCode.F24
+    case VK_F1 => KeyEvent.VK_F1
+    case VK_F2 => KeyEvent.VK_F2
+    case VK_F3 => KeyEvent.VK_F3
+    case VK_F4 => KeyEvent.VK_F4
+    case VK_F5 => KeyEvent.VK_F5
+    case VK_F6 => KeyEvent.VK_F5
+    case VK_F7 => KeyEvent.VK_F6
+    case VK_F8 => KeyEvent.VK_F7
+    case VK_F9 => KeyEvent.VK_F8
+    case VK_F10 => KeyEvent.VK_F10
+    case VK_F11 => KeyEvent.VK_F11
+    case VK_F12 => KeyEvent.VK_F12
+    case VK_F13 => KeyEvent.VK_F13
+    case VK_F14 => KeyEvent.VK_F14
+    case VK_F15 => KeyEvent.VK_F15
+    case VK_F16 => KeyEvent.VK_F16
+    case VK_F17 => KeyEvent.VK_F17
+    case VK_F18 => KeyEvent.VK_F18
+    case VK_F19 => KeyEvent.VK_F19
+    case VK_F20 => KeyEvent.VK_F20
+    case VK_F21 => KeyEvent.VK_F21
+    case VK_F22 => KeyEvent.VK_F22
+    case VK_F23 => KeyEvent.VK_F23
+    case VK_F24 => KeyEvent.VK_F24
 
-    case VK_NUMLOCK => KeyCode.NUM_LOCK
-    case VK_SCROLL => KeyCode.SCROLL_LOCK
-    case VK_LSHIFT => KeyCode.SHIFT
-    case VK_RSHIFT => KeyCode.SHIFT
-    case VK_LCONTROL => KeyCode.CONTROL
-    case VK_RCONTROL => KeyCode.CONTROL
-    case VK_LMENU => KeyCode.WINDOWS
-    case VK_RMENU => KeyCode.WINDOWS
+    case VK_NUMLOCK => KeyEvent.VK_NUM_LOCK
+    case VK_SCROLL => KeyEvent.VK_SCROLL_LOCK
+    case VK_LSHIFT => KeyEvent.VK_SHIFT
+    case VK_RSHIFT => KeyEvent.VK_SHIFT
+    case VK_LCONTROL => KeyEvent.VK_CONTROL
+    case VK_RCONTROL => KeyEvent.VK_CONTROL
+    case VK_LMENU => KeyEvent.VK_WINDOWS
+    case VK_RMENU => KeyEvent.VK_WINDOWS
 
-    case VK_OEM1 => KeyCode.COLON
-    case VK_OEM2 => KeyCode.SLASH
-    case VK_OEM3 => KeyCode.BACK_QUOTE
-    case VK_OEM4 => KeyCode.OPEN_BRACKET
-    case VK_OEM5 => KeyCode.BACK_SLASH
-    case VK_OEM6 => KeyCode.CLOSE_BRACKET
-    case VK_OEM7 => KeyCode.QUOTE
-    case VK_OEM102 => KeyCode.LESS
+    case VK_OEM1 => KeyEvent.VK_COLON
+    case VK_OEM2 => KeyEvent.VK_SLASH
+    case VK_OEM3 => KeyEvent.VK_BACK_QUOTE
+    case VK_OEM4 => KeyEvent.VK_OPEN_BRACKET
+    case VK_OEM5 => KeyEvent.VK_BACK_SLASH
+    case VK_OEM6 => KeyEvent.VK_CLOSE_BRACKET
+    case VK_OEM7 => KeyEvent.VK_QUOTE
+    case VK_OEM102 => KeyEvent.VK_LESS
 
-    case VK_CIRCUMFLEX => KeyCode.CIRCUMFLEX
+    case VK_CIRCUMFLEX => KeyEvent.VK_CIRCUMFLEX
 
-    case VK_OEM_MINUS => KeyCode.MINUS
-    case VK_OEM_PLUS => KeyCode.PLUS
-    case VK_OEM_COMMA => KeyCode.COMMA
-    case VK_OEM_PERIOD => KeyCode.PERIOD
+    case VK_OEM_MINUS => KeyEvent.VK_MINUS
+    case VK_OEM_PLUS => KeyEvent.VK_PLUS
+    case VK_OEM_COMMA => KeyEvent.VK_COMMA
+    case VK_OEM_PERIOD => KeyEvent.VK_PERIOD
 
-    case VK_PRIOR => KeyCode.PAGE_UP
+    case VK_PRIOR => KeyEvent.VK_PAGE_UP
 
-    case x => System.err.println(s"Unknwon VK_* KeyCode '0x${x.toHexString.toUpperCase}'"); KeyCode.UNDEFINED
+    case x => System.err.println(s"Unknwon VK_* KeyEvent.VK_'0x${x.toHexString.toUpperCase}'"); KeyEvent.VK_UNDEFINED
   }
 
-  protected object WindowsVKKeyCodes {
+  protected object Win32KeyCodeMapper {
     val VK_BACK = 0x08
     val VK_TAB = 0x09
 

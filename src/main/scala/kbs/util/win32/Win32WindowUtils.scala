@@ -28,8 +28,8 @@ object Win32WindowUtils {
   def getActiveWindowTitle: String = {
       val buffer = new Array[Char](MAX_TITLE_LENGTH)
       GetWindowText(GetForegroundWindow(), buffer, MAX_TITLE_LENGTH)
-      
-      buffer.mkString
+
+      buffer.mkString.trim
   }
 
   def getActiveProcessName: String = {
@@ -45,7 +45,7 @@ object Win32WindowUtils {
 
       CloseHandle(process)
 
-      buffer.mkString
+      buffer.mkString.trim
   }
 
 }
