@@ -1,23 +1,22 @@
 package his
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, OutputStreamWriter}
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{ConcurrentHashMap, ScheduledFuture, ScheduledThreadPoolExecutor, TimeUnit}
 
 import com.jfoenix.controls.JFXTabPane
 import de.jensd.fx.glyphs.fontawesome.{FontAwesomeIcon, FontAwesomeIconView}
 import his.service.{InputGatherer, KeyboardLayoutService}
-import his.util.{BufferedImageTranscoder, HeatmapGenerator}
+import his.util.HeatmapGenerator
 import javafx.animation.{KeyFrame, Timeline}
-import org.apache.batik.transcoder.TranscoderInput
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.application.{JFXApp, Platform}
 import scalafx.collections.ObservableBuffer
-import scalafx.embed.swing.SwingFXUtils
 import scalafx.geometry.Side
 import scalafx.scene.control.TabPane.TabClosingPolicy
 import scalafx.scene.control._
-import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{AnchorPane, BorderPane}
+import scalafx.scene.paint.Color
+import scalafx.scene.web.WebView
 import scalafx.scene.{Node, Scene}
 import scalafx.util.Duration
 
@@ -65,8 +64,8 @@ object Main extends JFXApp {
   implicit def integerToDuration(int: Int): Duration = new Duration(int)
 
 
-  val kbImageView = new ImageView()
-  kbImageView.preserveRatio = true
+  val kbImageView = new WebView()
+  //kbImageView.preserveRatio = true
 
   val appEntries = ObservableBuffer("All")
   var selectedItem = 0
@@ -109,15 +108,23 @@ object Main extends JFXApp {
             )
           }
 
+          val saveSVG = new Button("Save as SVG")
+          saveSVG.onAction = (_) => {
+            XML.save("./output.svg", transformer.get(selectedItem).transform().head)
+          }
+
           selector.setPrefWidth(100)
 
           AnchorPane.setTopAnchor(selector, 0)
           AnchorPane.setBottomAnchor(selector, 0)
           AnchorPane.setLeftAnchor(selector, 0)
 
-          AnchorPane.setAnchors(kbImageView, 0, 5, 0, 105)
+          AnchorPane.setAnchors(kbImageView, 0, 5, 30, 105)
 
-          children.addAll(selector, kbImageView)
+          AnchorPane.setBottomAnchor(saveSVG, 5)
+          AnchorPane.setRightAnchor(saveSVG, 5)
+
+          children.addAll(selector, kbImageView, saveSVG)
         }
 
         val settingsTab = new Tab
@@ -145,31 +152,23 @@ object Main extends JFXApp {
   val transformer = new ConcurrentHashMap[Int, HeatmapGenerator]()
   transformer.put(0, new HeatmapGenerator(KeyboardLayoutService.layouts("qwerty"), InputGatherer.all))
 
-  val kbRefresher: ScheduledFuture[_] = ex.scheduleAtFixedRate(() => try {
-    val heatmap = transformer.get(selectedItem).transform()
+  implicit class DoubleColorValue(d: Double) {
+    def toIntColor: Int = (d * 255).toInt
+    def toColorString: String = d.toIntColor.toHexString.toUpperCase
+  }
 
-    val byteOut = new ByteArrayOutputStream()
-    val byteWriter = new OutputStreamWriter(byteOut)
-    XML.write(byteWriter, heatmap.head, "UTF-8", xmlDecl = false, null)
-    byteWriter.flush()
-    byteWriter.close()
+  implicit class HexColor(color: Color) {
+    def toHexString: String = s"#${color.red.toColorString}${color.green.toColorString}${color.blue.toColorString}FF"
+    def toRGB: String = s"rgb(${color.red.toIntColor},${color.green.toIntColor},${color.blue.toIntColor})"
+  }
 
-    //XML.save("./output.svg", heatmap.head)
-
-    val t = new BufferedImageTranscoder(stage.width.value.toFloat - 155, stage.height.value.toFloat)
-    val byteIn = new ByteArrayInputStream(byteOut.toByteArray)
-    val in = new TranscoderInput(byteIn)
-
-    t.transcode(in, null)
-
-    Platform.runLater(() => {
-      kbImageView.image = SwingFXUtils.toFXImage(t.getImage, null)
-
-      kbImageView.fitWidth = stage.width.value - 155
-      kbImageView.fitHeight = stage.height.value
-    })
-
-  } catch { case ex: Exception => ex.printStackTrace() }, 1, 750, TimeUnit.MILLISECONDS)
+  InputGatherer.listeners.add(
+    (_, keyCode) => {
+      Platform.runLater(() => {
+        transformer.get(selectedItem).transform(kbImageView.engine)
+      })
+    }
+  )
 
   val appListRefresher: ScheduledFuture[_] = ex.scheduleAtFixedRate(() => try {
     Platform.runLater(() => {
@@ -180,9 +179,10 @@ object Main extends JFXApp {
     })
   } catch { case ex: Exception => ex.printStackTrace() }, 1000, 500, TimeUnit.MILLISECONDS)
 
+  kbImageView.setContextMenuEnabled(false)
+  kbImageView.engine.loadContent(KeyboardLayoutService.layoutToString("qwerty"))
 
   def shutdown(): Unit = {
-    kbRefresher.cancel(true)
     appListRefresher.cancel(true)
     ex.shutdown()
 

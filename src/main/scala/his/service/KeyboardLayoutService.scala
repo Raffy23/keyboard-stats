@@ -1,6 +1,6 @@
 package his.service
 
-import java.io.InputStreamReader
+import java.io.{ByteArrayOutputStream, InputStreamReader, OutputStreamWriter}
 
 import scala.io.Source
 import scala.xml.{Node, XML}
@@ -19,5 +19,15 @@ object KeyboardLayoutService {
   val layouts: Map[String, Seq[Node]] = Map(
     "qwerty" -> XML.load(fromResource("Qwerty.svg"))
   )
+
+  def layoutToString(name: String): String = {
+    val byteOut = new ByteArrayOutputStream()
+    val byteWriter = new OutputStreamWriter(byteOut)
+    XML.write(byteWriter, layouts(name).head, "UTF-8", xmlDecl = false, null)
+    byteWriter.flush()
+    byteWriter.close()
+
+    new String(byteOut.toByteArray)
+  }
 
 }

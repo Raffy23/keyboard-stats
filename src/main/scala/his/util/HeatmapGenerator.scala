@@ -1,6 +1,8 @@
 package his.util
 
+import his.Main.kbImageView
 import javafx.scene.paint.Color
+import scalafx.scene.web.WebEngine
 
 import scala.collection.concurrent.TrieMap
 import scala.language.implicitConversions
@@ -16,7 +18,24 @@ import scala.xml.transform.{RewriteRule, RuleTransformer}
   */
 class HeatmapGenerator(keymap: Seq[Node], keys: TrieMap[Int, Long], startColor: Color = Color.WHITE, endColor: Color = Color.RED) {
 
+  implicit class DoubleColorValue(d: Double) {
+    def toIntColor: Int = (d * 255).toInt
+    def toColorString: String = d.toIntColor.toHexString.toUpperCase
+  }
+
+  implicit class HexColor(color: Color) {
+    def toHexString: String = s"#${color.getRed.toColorString}${color.getGreen.toColorString}${color.getBlue.toColorString}FF"
+    def toRGB: String = s"rgb(${color.getRed.toIntColor},${color.getGreen.toIntColor},${color.getBlue.toIntColor})"
+  }
+
   def transform(): Seq[Node] = new RuleTransformer(xmlColoringRule(max)).transform(keymap)
+
+  def transform(engine: WebEngine): Unit = {
+    keys.foreach { case (keyCode, count) => {
+      val color = startColor.interpolate(endColor, count.asInstanceOf[Double] / max)
+      engine.getDocument.getElementById(s"0x${keyCode.toHexString.toUpperCase}").setAttribute("style", s"fill:${color.toRGB};fill-opacity:1;stroke:#202326;stroke-width:0")
+    }}
+  }
 
   private def max: Long = if(keys.nonEmpty) keys.maxBy(_._2)._2 else 1L
 
@@ -27,16 +46,6 @@ class HeatmapGenerator(keymap: Seq[Node], keys: TrieMap[Int, Long], startColor: 
     implicit class AttributeCopyTranform(attr: Attribute) {
       def copyData(key: String = attr.key, value: Any = attr.value): Attribute =
         Attribute(attr.pre, key, Text(value.toString), attr.next)
-    }
-
-    implicit class DoubleColorValue(d: Double) {
-      def toIntColor: Int = (d * 255).toInt
-      def toColorString: String = d.toIntColor.toHexString.toUpperCase
-    }
-
-    implicit class HexColor(color: Color) {
-      def toHexString: String = s"#${color.getRed.toColorString}${color.getGreen.toColorString}${color.getBlue.toColorString}FF"
-      def toRGB: String = s"rgb(${color.getRed.toIntColor},${color.getGreen.toIntColor},${color.getBlue.toIntColor})"
     }
 
     implicit def iterableToMetaData(items: Iterable[MetaData]): MetaData = {
