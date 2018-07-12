@@ -1,4 +1,4 @@
-package kbs.util.win32
+package his.util.win32
 
 import java.awt.event.KeyEvent
 

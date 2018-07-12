@@ -1,4 +1,4 @@
-package kbs.util
+package his.util
 
 import java.awt.image.BufferedImage
 

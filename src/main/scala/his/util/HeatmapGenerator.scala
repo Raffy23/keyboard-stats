@@ -1,4 +1,4 @@
-package kbs.util
+package his.util
 
 import javafx.scene.paint.Color
 
@@ -18,7 +18,7 @@ class HeatmapGenerator(keymap: Seq[Node], keys: TrieMap[Int, Long], startColor: 
 
   def transform(): Seq[Node] = new RuleTransformer(xmlColoringRule(max)).transform(keymap)
 
-  private def max: Long = keys.maxBy(_._2)._2
+  private def max: Long = if(keys.nonEmpty) keys.maxBy(_._2)._2 else 1L
 
   private def xmlColoringRule(max: Double) = new RewriteRule {
 

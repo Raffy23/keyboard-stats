@@ -1,4 +1,4 @@
-package kbs.util.win32.jna;
+package his.util.win32.jna;
 
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;

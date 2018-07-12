@@ -1,7 +1,7 @@
-package kbs.util
+package his.util
 
 import com.sun.jna.Platform
-import kbs.util.win32.WindowsKeyListener
+import his.util.win32.WindowsKeyListener
 
 /**
   * Created by: 

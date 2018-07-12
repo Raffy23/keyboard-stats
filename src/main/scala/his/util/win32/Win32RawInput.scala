@@ -1,13 +1,13 @@
-package kbs.util.win32
+package his.util.win32
 
 import com.sun.jna.platform.win32.Win32Exception
 import com.sun.jna.platform.win32.WinDef._
 import com.sun.jna.platform.win32.WinUser._
 import com.sun.jna.win32.W32APIOptions
 import com.sun.jna.{Native, Structure}
-import kbs.util.KeyEventListener
-import kbs.util.KeyEventListener.{KEY_PRESSED, KEY_RELEASED}
-import kbs.util.win32.jna.{RAWINPUT, RAWINPUTDEVICE, RAWINPUTHEADER, User32Lib}
+import his.util.KeyEventListener
+import his.util.KeyEventListener.{KEY_PRESSED, KEY_RELEASED}
+import his.util.win32.jna.{RAWINPUT, RAWINPUTDEVICE, RAWINPUTHEADER, User32Lib}
 
 import scala.language.implicitConversions
 

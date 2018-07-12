@@ -1,8 +1,8 @@
-package kbs.util.win32
+package his.util.win32
 
 import com.sun.jna.platform.win32.Win32Exception
 import com.sun.jna.ptr.IntByReference
-import kbs.util.win32.jna.JNAPsapi
+import his.util.win32.jna.JNAPsapi
 
 
 /**

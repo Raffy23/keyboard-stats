@@ -1,6 +1,6 @@
-package kbs.util.win32
+package his.util.win32
 
-import kbs.util.{KeyEventListener, KeyListener}
+import his.util.{KeyEventListener, KeyListener}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Future

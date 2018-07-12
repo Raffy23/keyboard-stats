@@ -1,6 +1,6 @@
-package kbs.util
+package his.util
 
-import kbs.util.KeyEventListener.KeyEventType
+import his.util.KeyEventListener.KeyEventType
 
 
 /**

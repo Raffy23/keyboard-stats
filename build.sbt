@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules" %% "scala-xml" % "1.1.0",
 
   // JavaFX for UI
-  "org.scalafx" %% "scalafxml-core-sfx8" % "0.4",
-  "org.scalafx" %% "scalafx" % "8.0.144-R12"
+  "org.scalafx" %% "scalafx" % "8.0.144-R12",
+  "com.jfoenix" % "jfoenix" % "8.0.5",
+  "de.jensd" % "fontawesomefx" % "8.9"
 )
