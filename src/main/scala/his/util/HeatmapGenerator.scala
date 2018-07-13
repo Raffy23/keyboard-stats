@@ -32,7 +32,13 @@ class HeatmapGenerator(keymap: Seq[Node], keys: TrieMap[Int, Long], startColor: 
   def transform(engine: WebEngine): Unit = {
     keys.foreach { case (keyCode, count) => {
       val color = startColor.interpolate(endColor, count.asInstanceOf[Double] / max)
-      engine.getDocument.getElementById(s"0x${keyCode.toHexString.toUpperCase}").setAttribute("style", s"fill:${color.toRGB};fill-opacity:1;stroke:#202326;stroke-width:0")
+      val elem = engine.document.getElementById(s"0x${keyCode.toHexString.toUpperCase}")
+
+      if (elem == null) {
+        System.err.println(s"Unable to refresh key 0x${keyCode.toHexString.toUpperCase}, not found in keymap!")
+      } else {
+        elem.setAttribute("style", s"fill:${color.toRGB};fill-opacity:1;stroke:#202326;stroke-width:0")
+      }
     }}
   }
 

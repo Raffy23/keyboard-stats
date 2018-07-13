@@ -1,26 +1,23 @@
 package his.ui
 
-import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, OutputStreamWriter}
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon
 import his.service.{InputGatherer, KeyboardLayoutService}
+import his.ui.Defaults._
 import his.ui.Implicits._
 import his.util.i18n._
-import his.util.{BufferedImageTranscoder, HeatmapGenerator, SVGUtility}
-import javax.imageio.ImageIO
-import org.apache.batik.transcoder.TranscoderInput
+import his.util.{HeatmapGenerator, SVGUtility}
 import scalafx.application.Platform
-import scalafx.scene.control.{Button, ListView, Tab, Tooltip}
+import scalafx.scene.control._
 import scalafx.scene.web.WebView
 import scalafxml.core.macros.sfxml
 
 import scala.collection.mutable
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.xml.XML
-import scala.concurrent.ExecutionContext.Implicits.global
-import Defaults._
 
 /**
   * Created by: 
@@ -30,7 +27,8 @@ import Defaults._
   */
 @sfxml class JavaFXController(kbWebView: WebView, btnSaveSVG: Button,
                               lvRecordedApps: ListView[String], btnSavePNG: Button,
-                              tabKeyboard: Tab, tabSettings: Tab) {
+                              tabKeyboard: Tab, tabSettings: Tab, statsToday: Label, statsMonth: Label,
+                              statsYear: Label, statsAllTime: Label) {
 
   private val backgroundTasks = new ScheduledThreadPoolExecutor(1)
   private val transformer = new mutable.HashMap[String, HeatmapGenerator]()
@@ -66,7 +64,10 @@ import Defaults._
   })
 
   // Register global listener
-  InputGatherer.listeners.add((_, keyCode) => Platform.runLater(() => selected.get().transform(kbWebView.engine)))
+  InputGatherer.listeners.add((_, keyCode) => Platform.runLater(() => {
+    selected.get().transform(kbWebView.engine)
+    statsToday.text = InputGatherer.allMax.toString
+  }))
 
   // Only refresh ListView after some time
   private val appListRefresher = backgroundTasks.scheduleAtFixedRate(() => try {
