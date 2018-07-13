@@ -8,6 +8,6 @@ package his.ui
   */
 object Defaults {
   val TOOLTIP_DELAY = 250
-  val DEFAULT_KEYBOARD_LAYOUT = "qwerty"
+  val DEFAULT_KEYBOARD_LAYOUT = "qwertz"
   val DEFAULT_SAVE_PATH = "./output"
 }
