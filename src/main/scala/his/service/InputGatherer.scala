@@ -1,5 +1,6 @@
 package his.service
 
+import java.awt.event.KeyEvent
 import java.util.concurrent.atomic.AtomicLong
 
 import his.util.KeyEventListener.KEY_RELEASED
@@ -25,7 +26,7 @@ object InputGatherer {
   val allMax = new AtomicLong(1L)
 
   val globalKeyListener = new GlobalKeyListener((event, keyCode) => {
-    if (event == KEY_RELEASED) {
+    if (event == KEY_RELEASED && KeyEvent.VK_UNDEFINED != keyCode) {
       val appName = Win32WindowUtils.getActiveProcessName
       val app = apps.getOrElseUpdate(appName, new TrieMap[Int, Long])
 

@@ -17,6 +17,8 @@ import scala.xml.transform.{RewriteRule, RuleTransformer}
   */
 class HeatmapGenerator(keymap: Seq[Node], keys: TrieMap[Int, Long], startColor: Color = Color.WHITE, endColor: Color = Color.RED) {
 
+  private var deadKeys = Set.empty[Int]
+
   implicit class DoubleColorValue(d: Double) {
     def toIntColor: Int = (d * 255).toInt
     def toColorString: String = d.toIntColor.toHexString.toUpperCase
@@ -35,7 +37,10 @@ class HeatmapGenerator(keymap: Seq[Node], keys: TrieMap[Int, Long], startColor: 
       val elem = engine.document.getElementById(s"0x${keyCode.toHexString.toUpperCase}")
 
       if (elem == null) {
-        System.err.println(s"Unable to refresh key 0x${keyCode.toHexString.toUpperCase}, not found in keymap!")
+        if (!deadKeys.contains(keyCode)) {
+          System.err.println(s"Unable to refresh key 0x${keyCode.toHexString.toUpperCase}, not found in keymap!")
+          deadKeys += keyCode
+        }
       } else {
         elem.setAttribute("style", s"fill:${color.toRGB};fill-opacity:1;stroke:#202326;stroke-width:0")
       }

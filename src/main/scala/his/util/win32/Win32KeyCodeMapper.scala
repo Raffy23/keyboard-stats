@@ -107,10 +107,10 @@ object Win32KeyCodeMapper {
     case VK_F3 => KeyEvent.VK_F3
     case VK_F4 => KeyEvent.VK_F4
     case VK_F5 => KeyEvent.VK_F5
-    case VK_F6 => KeyEvent.VK_F5
-    case VK_F7 => KeyEvent.VK_F6
-    case VK_F8 => KeyEvent.VK_F7
-    case VK_F9 => KeyEvent.VK_F8
+    case VK_F6 => KeyEvent.VK_F6
+    case VK_F7 => KeyEvent.VK_F7
+    case VK_F8 => KeyEvent.VK_F8
+    case VK_F9 => KeyEvent.VK_F9
     case VK_F10 => KeyEvent.VK_F10
     case VK_F11 => KeyEvent.VK_F11
     case VK_F12 => KeyEvent.VK_F12
@@ -138,14 +138,12 @@ object Win32KeyCodeMapper {
 
     case VK_OEM1 => KeyEvent.VK_COLON
     case VK_OEM2 => KeyEvent.VK_SLASH
-    case VK_OEM3 => KeyEvent.VK_BACK_QUOTE
-    case VK_OEM4 => KeyEvent.VK_OPEN_BRACKET
-    case VK_OEM5 => KeyEvent.VK_BACK_SLASH
-    case VK_OEM6 => KeyEvent.VK_CLOSE_BRACKET
+    case VK_OEM3 => KeyEvent.VK_SEMICOLON
+    case VK_OEM4 => KeyEvent.VK_BACK_SLASH
+    case VK_OEM5 => KeyEvent.VK_CIRCUMFLEX
+    case VK_OEM6 => KeyEvent.VK_BACK_QUOTE
     case VK_OEM7 => KeyEvent.VK_QUOTE
     case VK_OEM102 => KeyEvent.VK_LESS
-
-    case VK_CIRCUMFLEX => KeyEvent.VK_CIRCUMFLEX
 
     case VK_OEM_MINUS => KeyEvent.VK_MINUS
     case VK_OEM_PLUS => KeyEvent.VK_PLUS
@@ -153,8 +151,10 @@ object Win32KeyCodeMapper {
     case VK_OEM_PERIOD => KeyEvent.VK_PERIOD
 
     case VK_PRIOR => KeyEvent.VK_PAGE_UP
+    case VK_NEXT => KeyEvent.VK_PAGE_DOWN
+    case VK_SNAPSHOT => KeyEvent.VK_PRINTSCREEN
 
-    case x => System.err.println(s"Unknwon VK_* KeyEvent.VK_'0x${x.toHexString.toUpperCase}'"); KeyEvent.VK_UNDEFINED
+    case x => System.err.println(s"WARNING: Unknown KeyCode: '0x${x.toHexString.toUpperCase}'"); KeyEvent.VK_UNDEFINED
   }
 
   protected object Win32KeyCodeMapper {
@@ -301,8 +301,6 @@ object Win32KeyCodeMapper {
     val VK_OEM6 = 0xDD
     val VK_OEM7 = 0xDE
     val VK_OEM102 = 0xE2
-
-    val VK_CIRCUMFLEX = 220
 
     val VK_OEM_PLUS	 = 0xBB
     val VK_OEM_COMMA = 0xBC

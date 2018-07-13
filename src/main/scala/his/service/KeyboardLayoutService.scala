@@ -17,7 +17,8 @@ object KeyboardLayoutService {
     Source.fromResource(name, KeyboardLayoutService.getClass.getClassLoader).reader()
 
   val layouts: Map[String, Seq[Node]] = Map(
-    "qwerty" -> XML.load(fromResource("layouts/Qwerty.svg"))
+    "qwerty" -> XML.load(fromResource("layouts/Qwerty.svg")),
+    "qwertz" -> XML.load(fromResource("layouts/Qwertz.svg"))
   )
 
   def layoutToString(name: String): String = {

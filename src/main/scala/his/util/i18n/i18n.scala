@@ -27,7 +27,10 @@ package object i18n {
   }
 
   implicit class I18NString(str: String) {
-    def localize: String = Try(LanguageManager.bundle.getString(str)).getOrElse("__"+str+"__")
+    def localize: String = Try(LanguageManager.bundle.getString(str)).fold(
+      (_) => { System.err.println(s"ERROR: Unable to find: '$str' in Resource bundle!"); s"__${str}__" },
+      (x) => x
+    )
   }
 
 }

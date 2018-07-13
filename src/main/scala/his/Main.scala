@@ -32,12 +32,19 @@ object Main extends JFXApp {
   )
 
   loader.load()
-  private val controller: JavaFXController = loader.getController()
+  private val controller: JavaFXController = loader.getController[JavaFXController]
+
+  private val WINDOW_WIDTH   = 865
+  private val WINDOW_HEIGHT = 500
+
 
   stage = new PrimaryStage {
     title = "hInput - Heatmap"
-    minWidth = 800
-    minHeight = 600
+    width = WINDOW_WIDTH
+    height = WINDOW_HEIGHT
+
+    minWidth = WINDOW_WIDTH
+    minHeight = WINDOW_HEIGHT
 
     scene = new Scene(loader.getScalaFXRoot[jfxs.layout.AnchorPane])
   }

@@ -77,15 +77,12 @@ class Win32RawInput(keyEventListener: KeyEventListener) {
           case RIM_TYPEKEYBOARD =>
             raw.data.readField("keyboard") // <-- wow
 
-            keyEventListener.eventOccurred(
-              raw.data.keyboard.Message.intValue() match {
-                case 261 /* ??? */ => KEY_PRESSED
-                case 260 /* ??? */ => KEY_PRESSED
-                case WM_KEYDOWN => KEY_PRESSED
-                case WM_KEYUP => KEY_RELEASED
-              },
-              Win32KeyCodeMapper.map(raw.data.keyboard.VKey.intValue())
-            )
+            if (raw.data.keyboard.Message.intValue() == WM_KEYUP) {
+              keyEventListener.eventOccurred(
+                KEY_RELEASED,
+                Win32KeyCodeMapper.map(raw.data.keyboard.VKey.intValue())
+              )
+            }
 
           case RIM_TYPEMOUSE => println("Mouse Events are not implemented")
           case _ => println("What kind of event it this ?")
