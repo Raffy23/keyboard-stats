@@ -1,6 +1,5 @@
 package his.util
 
-import his.Main.kbImageView
 import javafx.scene.paint.Color
 import scalafx.scene.web.WebEngine
 
