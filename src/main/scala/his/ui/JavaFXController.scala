@@ -8,7 +8,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon
 import his.service.{InputGatherer, KeyboardLayoutService}
 import his.ui.Implicits._
 import his.util.i18n._
-import his.util.{BufferedImageTranscoder, HeatmapGenerator}
+import his.util.{BufferedImageTranscoder, HeatmapGenerator, SVGUtility}
 import javax.imageio.ImageIO
 import org.apache.batik.transcoder.TranscoderInput
 import scalafx.application.Platform
@@ -19,7 +19,6 @@ import scalafxml.core.macros.sfxml
 import scala.collection.mutable
 import scala.concurrent.Future
 import scala.xml.XML
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import Defaults._
 
@@ -79,26 +78,9 @@ import Defaults._
     })
   } catch { case ex: Exception => ex.printStackTrace() }, 1000, 500, TimeUnit.MILLISECONDS)
 
-  // Button save Actions (TODO: write utility for PNG saving)
-  btnSaveSVG.onAction = (_) => XML.save(DEFAULT_SAVE_PATH + ".svg", selected.get().transform().head)
-  btnSavePNG.onAction = (_) => Future {
-    val byteOut = new ByteArrayOutputStream()
-    val byteWriter = new OutputStreamWriter(byteOut)
-
-    XML.write(byteWriter, selected.get().transform().head, "UTF-8", xmlDecl = false, null)
-    byteWriter.flush()
-    byteWriter.close()
-
-    val byteIn = new ByteArrayInputStream(byteOut.toByteArray)
-    val t = new BufferedImageTranscoder(776*2, 236*2)
-    val in = new TranscoderInput(byteIn)
-
-    t.transcode(in, null)
-
-    val image = t.getImage
-    ImageIO.write(image, "png", new File(DEFAULT_SAVE_PATH + ".png"))
-  }
-
+  // Button save Actions (execute in Future to avoid non responsive ui)
+  btnSaveSVG.onAction = (_) => Future { XML.save(DEFAULT_SAVE_PATH + ".svg", selected.get().transform().head) }
+  btnSavePNG.onAction = (_) => Future { SVGUtility.saveAs(DEFAULT_SAVE_PATH, "png", selected.get().transform().head, 776*2, 236*2) }
 
   private def initTab(tab: Tab, icon: FontAwesomeIcon, tooltip: String): Unit = {
     tab.graphic = icon.toIcon
