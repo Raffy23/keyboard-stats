@@ -1,0 +1,26 @@
+.tab-pane .tab-header-area .tab-header-background {
+  -fx-background-color: derive(#828282, 5%);
+}
+
+.tab-pane .tab {
+  -fx-background-color: derive(#828282, 55%);
+  -fx-border-radius: 0;
+}
+
+.tab-pane .tab:selected {
+  -fx-background-color: derive(#828282, 75%);
+  -fx-border-radius: 0;
+}
+
+.tab .tab-label {
+  -fx-alignment: CENTER;
+  -fx-font-size: 42px;
+  -fx-font-weight: bold;
+}
+
+.tab-pane {
+  -fx-tab-min-height: 52px;
+  -fx-tab-min-width: 52px;
+  -fx-tab-max-height: 52px;
+  -fx-tab-max-width: 52px;
+}

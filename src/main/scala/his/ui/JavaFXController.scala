@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon
+import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import his.service.{InputGatherer, KeyboardLayoutService}
 import his.ui.Defaults._
 import his.ui.Implicits._
@@ -17,6 +18,7 @@ import scalafxml.core.macros.sfxml
 import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Try
 import scala.xml.XML
 
 /**
@@ -43,6 +45,8 @@ import scala.xml.XML
   // Init WebView
   kbWebView.contextMenuEnabled = false
   kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(DEFAULT_KEYBOARD_LAYOUT))
+  kbWebView.widthProperty().asObject().addListener((_,_,size) => Try(tryResize("svg2", "width", size)).recover{ case ex: Exception => ex.printStackTrace() })
+  kbWebView.heightProperty().asObject().addListener((_,_,size) => Try(tryResize("svg2", "height", size)).recover{ case ex: Exception => ex.printStackTrace() })
 
   // Configure ListView selection Listener
   lvRecordedApps.items.get().addAll("item.all".localize)
@@ -84,8 +88,20 @@ import scala.xml.XML
   btnSavePNG.onAction = (_) => Future { SVGUtility.saveAs(DEFAULT_SAVE_PATH, "png", selected.get().transform().head, 776*2, 236*2) }
 
   private def initTab(tab: Tab, icon: FontAwesomeIcon, tooltip: String): Unit = {
-    tab.graphic = icon.toIcon
+    tab.graphic = icon.toIcon(38.0)
     tab.tooltip = new Tooltip(tooltip).setDelay(TOOLTIP_DELAY)
+  }
+
+  private def tryResize(elemId: String, attr: String, value: Double): Unit = {
+    if (kbWebView.engine.document == null)
+      return
+
+    val elem = kbWebView.engine.document.getElementById(elemId)
+    if (elem == null)
+      return
+
+    elem.setAttribute(attr, value.toInt.toString + "px")
+    println(attr + " to " + value)
   }
 
   def shutdownBackgroundTasks(): Unit = {

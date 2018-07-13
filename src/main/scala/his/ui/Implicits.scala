@@ -1,6 +1,7 @@
 package his.ui
 
 import com.jfoenix.controls.JFXTabPane
+import de.jensd.fx.glyphs.GlyphIcon
 import de.jensd.fx.glyphs.fontawesome.{FontAwesomeIcon, FontAwesomeIconView}
 import javafx.animation.{KeyFrame, Timeline}
 import scalafx.scene.Node
@@ -21,7 +22,12 @@ object Implicits {
   implicit class sfxFontAwesomeIconView(fontAwesomeIcon: FontAwesomeIconView) extends Node(fontAwesomeIcon) { }
 
   implicit class FontAwesomeIconConverter(icon: FontAwesomeIcon) {
-    def toIcon: Node = new FontAwesomeIconView(icon)
+    def toIcon(size: Double = GlyphIcon.DEFAULT_ICON_SIZE): Node = {
+      val result = new FontAwesomeIconView(icon)
+      result.setGlyphSize(size)
+
+      result
+    }
   }
 
   implicit class HakyTooltipClass(tooltip: Tooltip) {

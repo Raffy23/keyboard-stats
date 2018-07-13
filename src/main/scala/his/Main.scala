@@ -34,8 +34,8 @@ object Main extends JFXApp {
   loader.load()
   private val controller: JavaFXController = loader.getController[JavaFXController]
 
-  private val WINDOW_WIDTH   = 865
-  private val WINDOW_HEIGHT = 500
+  private val WINDOW_WIDTH   = 893
+  private val WINDOW_HEIGHT = 528
 
 
   stage = new PrimaryStage {
