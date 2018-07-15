@@ -2,7 +2,7 @@ package his
 
 import java.awt.event.KeyEvent
 import java.awt.{AWTEvent, Toolkit}
-import java.io.File
+import java.io.{File, PrintWriter}
 import java.time.LocalDate
 import java.util.Locale
 
@@ -77,6 +77,16 @@ object Main extends JFXApp {
   stage.onCloseRequest = (_) => {
     controller.shutdownBackgroundTasks()
     InputGatherer.globalKeyListener.destroy()
+
+    Statistics.syncToDisk()()
+
+    import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._
+    import scala.collection.JavaConverters._
+
+    val writer = new PrintWriter(new File("./config/excluded_apps.json"))
+    writer.print(InputGatherer.badApps.asScala.asJson.noSpaces)
+    writer.flush()
+    writer.close()
   }
 
 
