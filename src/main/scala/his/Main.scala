@@ -1,7 +1,5 @@
 package his
 
-import java.awt.event.KeyEvent
-import java.awt.{AWTEvent, Toolkit}
 import java.io.{File, PrintWriter}
 import java.time.LocalDate
 import java.util.Locale
@@ -32,19 +30,12 @@ object Main extends JFXApp {
     println("Error Locale is not supported, falling back to english!")
   }
 
-  // Check directories
+  // Load stuff
   mkdirIfAbsent("./statistics/")
+  Statistics.syncFromDisk()()
+
   mkdirIfAbsent("./config/")
-  if (new File("./config/excluded_apps.json").exists()) {
-    import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._
-    import scala.collection.JavaConverters._
-    InputGatherer.badApps.addAll(
-      decode[List[String]](Source.fromFile("./config/excluded_apps.json").getLines().mkString).fold(
-        (_) => List.empty[String],
-        (v) => v
-      ).asJavaCollection
-    )
-  }
+  loadExcludedApps()
 
   InputGatherer.globalKeyListener.start()
   InputGatherer.listeners.add((_: KeyEventListener.KeyEventType, keyCode: Int, app: String) =>
@@ -80,20 +71,35 @@ object Main extends JFXApp {
 
     Statistics.syncToDisk()()
 
-    import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._
+    import io.circe.syntax._
+
     import scala.collection.JavaConverters._
 
     val writer = new PrintWriter(new File("./config/excluded_apps.json"))
-    writer.print(InputGatherer.badApps.asScala.asJson.noSpaces)
+    writer.print(InputGatherer.excludedApps.asScala.asJson.noSpaces)
     writer.flush()
     writer.close()
   }
 
 
-  def mkdirIfAbsent(path: String): Unit = {
+  private def mkdirIfAbsent(path: String): Unit = {
     val folder = new File(path)
     if (!folder.exists())
       folder.mkdirs()
+  }
+
+  private def loadExcludedApps(): Unit = {
+    if (new File("./config/excluded_apps.json").exists()) {
+      import io.circe.parser._
+
+      import scala.collection.JavaConverters._
+      InputGatherer.excludedApps.addAll(
+        decode[List[String]](Source.fromFile("./config/excluded_apps.json").getLines().mkString).fold(
+          (_) => List.empty[String],
+          (v) => v
+        ).asJavaCollection
+      )
+    }
   }
 
 }

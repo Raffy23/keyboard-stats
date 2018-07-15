@@ -31,6 +31,7 @@ object Statistics {
   def DEFAULT_SAVE_FILE(day: LocalDate = LocalDate.now()) =
     s"./statistics/${day.getDayOfMonth}-${day.getMonthValue}-${day.getYear}.json"
 
+  private val aggrStats = new TrieMap[LocalDate, KeyRecords]()
   private val statistics = new TrieMap[LocalDate, Record]()
 
 
@@ -46,6 +47,11 @@ object Statistics {
   def getToday: Option[Record] = getRecord(LocalDate.now())
   def getYesterday: Option[Record] = getRecord(LocalDate.now().minusDays(1))
 
+  def all(localDate: LocalDate = LocalDate.now()): KeyRecords = aggrStats.getOrElseUpdate(localDate, new KeyRecords)
+  def app(app: String, localDate: LocalDate = LocalDate.now()): KeyRecords =
+    statistics.getOrElseUpdate(localDate, new Record).getOrElseUpdate(app, new KeyRecords)
+
+  def getTodayKeys: Long = getToday.map(_.flatMap(_._2.values).sum).getOrElse(0L)
 
   import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._
   def syncToDisk(date: LocalDate = LocalDate.now())(file: String = DEFAULT_SAVE_FILE(date)): Unit = Future {
@@ -59,11 +65,22 @@ object Statistics {
       })
   }
 
+  def syncFromDisk(date: LocalDate = LocalDate.now())(file: String = DEFAULT_SAVE_FILE(date)): Unit =
+    loadFromDisk(date)().map(_.foreach { case (app, record) =>
+    record.foreach { case (keyCode, count) =>
+      statistics.getOrElseUpdate(date, new Record).getOrElseUpdate(app, new KeyRecords).updateValue(keyCode, (v) => v + count)
+      aggrStats.getOrElseUpdate(date, new KeyRecords).updateValue(keyCode, (v) => v + count)
+    }
+  })
+
+
   def loadFromDisk(date: LocalDate)(file: String = DEFAULT_SAVE_FILE(date)): Future[Record] = Future {
     decode[Record](Source.fromFile(file).getLines().mkString).fold(
       (e) => throw e,
       (x) => x
     )
   }
+
+
 
 }

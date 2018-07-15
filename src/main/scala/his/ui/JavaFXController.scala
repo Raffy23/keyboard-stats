@@ -36,7 +36,7 @@ import scala.xml.XML
 
   private val backgroundTasks = new ScheduledThreadPoolExecutor(1)
   private val transformer = new mutable.HashMap[String, HeatmapGenerator]()
-  transformer.put("item.all".localize, new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), InputGatherer.all))
+  transformer.put("item.all".localize, new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), Statistics.all()))
 
   private val selected = new AtomicReference[HeatmapGenerator](transformer("item.all".localize))
 
@@ -55,7 +55,7 @@ import scala.xml.XML
   lvRecordedApps.getSelectionModel.selectFirst()
   lvRecordedApps.getSelectionModel.selectedItemProperty().addListener((_, _ ,selectedItem) => {
     if (!transformer.contains(selectedItem))
-      transformer.put(selectedItem, new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), InputGatherer.apps(selectedItem)))
+      transformer.put(selectedItem, new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), Statistics.app(selectedItem)))
 
     // Set selected item for async refresh
     selected.set(transformer(selectedItem))
@@ -68,23 +68,27 @@ import scala.xml.XML
     })
   })
 
-  lvIgnoreApps.items.get().addAll(InputGatherer.badApps)
+  lvIgnoreApps.items.get().addAll(InputGatherer.excludedApps)
 
   // Register global listener
-  InputGatherer.listeners.add((_, keyCode, _) => Platform.runLater(() => {
+  InputGatherer.listeners.add((_, _, _) => Platform.runLater(() => {
     selected.get().transform(kbWebView.engine)
-    statsToday.text = InputGatherer.allMax.toString
+    statsToday.text = Statistics.getTodayKeys.toString
   }))
 
   // Only refresh ListView after some time
   private val appListRefresher = backgroundTasks.scheduleAtFixedRate(() => try {
     Platform.runLater(() => {
-      InputGatherer.apps.keys.foreach(app => {
+      Statistics.getToday.map(_.keys).foreach(_.foreach(app => {
         if(!lvRecordedApps.items.get().contains(app))
           lvRecordedApps.items.get().add(app)
-      })
+      }))
     })
   } catch { case ex: Exception => ex.printStackTrace() }, 1000, 500, TimeUnit.MILLISECONDS)
+
+  private val syncStats = backgroundTasks.scheduleAtFixedRate(() => {
+    Statistics.syncToDisk()()
+  }, 5, 5, TimeUnit.MINUTES)
 
   // Button save Actions (execute in Future to avoid non responsive ui)
   btnSaveSVG.onAction = (_) => Future { XML.save(DEFAULT_SAVE_PATH + ".svg", selected.get().transform().head) }
@@ -94,7 +98,7 @@ import scala.xml.XML
 
   btnIgnoreApp.onAction = (_) => {
     if (textIgnoreApp.text.value.nonEmpty) {
-      InputGatherer.badApps.add(textIgnoreApp.text.value)
+      InputGatherer.excludedApps.add(textIgnoreApp.text.value)
       lvIgnoreApps.items.get().add(textIgnoreApp.text.value)
     }
 
@@ -120,6 +124,8 @@ import scala.xml.XML
 
   def shutdownBackgroundTasks(): Unit = {
     appListRefresher.cancel(true)
+    syncStats.cancel(false)
+
     backgroundTasks.shutdown()
   }
 
