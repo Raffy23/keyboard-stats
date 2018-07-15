@@ -4,7 +4,7 @@ scalaVersion := "2.12.6"
 
 resourceDirectory in Compile := baseDirectory.value / "resources"
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
 
 libraryDependencies ++= Seq(
   // JNA & System hooks for platform specific stuff (winapi, x11, ....)
@@ -22,3 +22,10 @@ libraryDependencies ++= Seq(
   "com.jfoenix" % "jfoenix" % "8.0.5",
   "de.jensd" % "fontawesomefx" % "8.9"
 )
+
+val circeVersion = "0.9.3"
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser"
+).map(_ % circeVersion)

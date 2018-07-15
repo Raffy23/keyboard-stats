@@ -17,26 +17,33 @@ import scala.collection.concurrent.TrieMap
   */
 object InputGatherer {
 
+  type App = String
+  type KeyRecords = TrieMap[Int, Long]
+
   val listeners = new java.util.Vector[KeyEventListener]()
 
-  val apps = new TrieMap[String, TrieMap[Int, Long]]()
-  val appsMax = new TrieMap[String, Long]()
+  val badApps = new java.util.Vector[App]
+
+  val apps = new TrieMap[App, KeyRecords]()
+  val appsMax = new TrieMap[App, Long]()
 
   val all = new TrieMap[Int, Long]()
   val allMax = new AtomicLong(1L)
 
-  val globalKeyListener = new GlobalKeyListener((event, keyCode) => {
+  val globalKeyListener = new GlobalKeyListener((event, keyCode, _) => {
     if (event == KEY_RELEASED && KeyEvent.VK_UNDEFINED != keyCode) {
       val appName = Win32WindowUtils.getActiveProcessName
-      val app = apps.getOrElseUpdate(appName, new TrieMap[Int, Long])
+      if (!badApps.contains(appName)) {
+        val app = apps.getOrElseUpdate(appName, new KeyRecords)
 
-      app.put(keyCode, app.getOrElse(keyCode, 0L) + 1L)
-      appsMax.put(appName, appsMax.getOrElse(appName, 0L) + 1L)
+        app.put(keyCode, app.getOrElse(keyCode, 0L) + 1L)
+        appsMax.put(appName, appsMax.getOrElse(appName, 0L) + 1L)
 
-      all.put(keyCode, all.getOrElse(keyCode, 0L) + 1L)
-      allMax.incrementAndGet()
+        all.put(keyCode, all.getOrElse(keyCode, 0L) + 1L)
+        allMax.incrementAndGet()
 
-      listeners.forEach(x => x.eventOccurred(event, keyCode))
+        listeners.forEach(x => x.eventOccurred(event, keyCode, appName))
+      }
     }
   })
 

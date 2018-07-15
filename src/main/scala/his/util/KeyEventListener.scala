@@ -10,7 +10,7 @@ import his.util.KeyEventListener.KeyEventType
   * @version 11.07.2018
   */
 abstract class KeyEventListener {
-  def eventOccurred(event: KeyEventType, keyCode: Int): Unit
+  def eventOccurred(event: KeyEventType, keyCode: Int, app: String): Unit
 }
 
 object KeyEventListener {

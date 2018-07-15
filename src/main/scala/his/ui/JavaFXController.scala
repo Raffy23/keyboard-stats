@@ -1,11 +1,11 @@
 package his.ui
 
+import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon
-import de.jensd.fx.glyphs.materialicons.MaterialIcon
-import his.service.{InputGatherer, KeyboardLayoutService}
+import his.service.{InputGatherer, KeyboardLayoutService, Statistics}
 import his.ui.Defaults._
 import his.ui.Implicits._
 import his.util.i18n._
@@ -30,7 +30,9 @@ import scala.xml.XML
 @sfxml class JavaFXController(kbWebView: WebView, btnSaveSVG: Button,
                               lvRecordedApps: ListView[String], btnSavePNG: Button,
                               tabKeyboard: Tab, tabSettings: Tab, statsToday: Label, statsMonth: Label,
-                              statsYear: Label, statsAllTime: Label) {
+                              statsYear: Label, statsAllTime: Label, btnSaveJSON: Button,
+                              btn_loadFromJson: Button, lvIgnoreApps: ListView[String],
+                              textIgnoreApp: TextField, btnIgnoreApp: Button) {
 
   private val backgroundTasks = new ScheduledThreadPoolExecutor(1)
   private val transformer = new mutable.HashMap[String, HeatmapGenerator]()
@@ -64,11 +66,12 @@ import scala.xml.XML
       if (kbWebView.engine.getLoadWorker.getTotalWork == work.doubleValue())
         selected.get().transform(kbWebView.engine)
     })
-
   })
 
+  lvIgnoreApps.items.get().addAll(InputGatherer.badApps)
+
   // Register global listener
-  InputGatherer.listeners.add((_, keyCode) => Platform.runLater(() => {
+  InputGatherer.listeners.add((_, keyCode, _) => Platform.runLater(() => {
     selected.get().transform(kbWebView.engine)
     statsToday.text = InputGatherer.allMax.toString
   }))
@@ -86,6 +89,17 @@ import scala.xml.XML
   // Button save Actions (execute in Future to avoid non responsive ui)
   btnSaveSVG.onAction = (_) => Future { XML.save(DEFAULT_SAVE_PATH + ".svg", selected.get().transform().head) }
   btnSavePNG.onAction = (_) => Future { SVGUtility.saveAs(DEFAULT_SAVE_PATH, "png", selected.get().transform().head, 776*2, 236*2) }
+  btnSaveJSON.onAction = (_) => Statistics.syncToDisk()()
+  btn_loadFromJson.onAction = (_) => Statistics.loadFromDisk(LocalDate.now())().map(records => println(records)).recover{ case e: Exception => e.printStackTrace()}
+
+  btnIgnoreApp.onAction = (_) => {
+    if (textIgnoreApp.text.value.nonEmpty) {
+      InputGatherer.badApps.add(textIgnoreApp.text.value)
+      lvIgnoreApps.items.get().add(textIgnoreApp.text.value)
+    }
+
+    textIgnoreApp.text.setValue("")
+  }
 
   private def initTab(tab: Tab, icon: FontAwesomeIcon, tooltip: String): Unit = {
     tab.graphic = icon.toIcon(38.0)

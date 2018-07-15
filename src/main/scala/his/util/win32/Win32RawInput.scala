@@ -44,7 +44,7 @@ class Win32RawInput(keyEventListener: KeyEventListener) {
       case WM_CREATE =>
         // Build RawInputDevice structure:
         import RAWINPUTDEVICE._
-        rid(0).dwFlags      = RIDEV_NOLEGACY | RIDEV_INPUTSINK
+        rid(0).dwFlags      = RIDEV_INPUTSINK // JavaFX does not work with RIDEV_NOLEGACY
         rid(0).usUsagePage  = 1
         rid(0).usUsage      = RID_KEYBOARD
         rid(0).hwndTarget   = hWndMain
@@ -80,7 +80,8 @@ class Win32RawInput(keyEventListener: KeyEventListener) {
             if (raw.data.keyboard.Message.intValue() == WM_KEYUP) {
               keyEventListener.eventOccurred(
                 KEY_RELEASED,
-                Win32KeyCodeMapper.map(raw.data.keyboard.VKey.intValue())
+                Win32KeyCodeMapper.map(raw.data.keyboard.VKey.intValue()),
+                null
               )
             }
 
