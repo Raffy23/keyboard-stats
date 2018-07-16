@@ -37,6 +37,7 @@ object Statistics {
 
   def logKeyPress(date: LocalDate, app: String, keyCode: Int): Unit = {
     statistics.getOrElseUpdate(date, new Record).getOrElseUpdate(app, new KeyRecords).updateValue(keyCode, (x) => x + 1)
+    aggrStats.getOrElseUpdate(date, new KeyRecords).updateValue(keyCode, (x) => x + 1)
   }
 
 
@@ -65,7 +66,7 @@ object Statistics {
       })
   }
 
-  def syncFromDisk(date: LocalDate = LocalDate.now())(file: String = DEFAULT_SAVE_FILE(date)): Unit =
+  def syncFromDisk(date: LocalDate = LocalDate.now())(file: String = DEFAULT_SAVE_FILE(date)): Future[Unit] =
     loadFromDisk(date)().map(_.foreach { case (app, record) =>
     record.foreach { case (keyCode, count) =>
       statistics.getOrElseUpdate(date, new Record).getOrElseUpdate(app, new KeyRecords).updateValue(keyCode, (v) => v + count)

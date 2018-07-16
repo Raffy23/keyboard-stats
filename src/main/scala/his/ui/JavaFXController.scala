@@ -10,9 +10,11 @@ import his.ui.Defaults._
 import his.ui.Implicits._
 import his.util.i18n._
 import his.util.{HeatmapGenerator, SVGUtility}
+import javafx.beans.value
+import javafx.beans.value.ChangeListener
 import scalafx.application.Platform
 import scalafx.scene.control._
-import scalafx.scene.web.WebView
+import scalafx.scene.web.{WebEngine, WebView}
 import scalafxml.core.macros.sfxml
 
 import scala.collection.mutable
@@ -63,19 +65,20 @@ import scala.xml.XML
 
     // Re-load keymap from svg & render new content
     kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(DEFAULT_KEYBOARD_LAYOUT))
-    kbWebView.engine.getLoadWorker.workDoneProperty().addListener((_,_,work) => {
-      if (kbWebView.engine.getLoadWorker.getTotalWork == work.doubleValue())
-        selected.get().transform(kbWebView.engine)
-    })
+    kbWebView.engine.doAfterLoadOnce(() => selected.get().transform(kbWebView.engine))
   })
 
   lvIgnoreApps.items.get().addAll(InputGatherer.excludedApps)
 
   // Register global listener
-  InputGatherer.listeners.add((_, _, _) => Platform.runLater(() => {
+  InputGatherer.listeners.add((_, _, _) => update())
+
+  def update(): Unit = Platform.runLater(() => {
     selected.get().transform(kbWebView.engine)
     statsToday.text = Statistics.getTodayKeys.toString
-  }))
+  })
+
+  def updateAfterLoaded(): Unit = Platform.runLater(() => kbWebView.engine.doAfterLoadOnce(update))
 
   // Only refresh ListView after some time
   private val appListRefresher = backgroundTasks.scheduleAtFixedRate(() => try {
@@ -106,18 +109,33 @@ import scala.xml.XML
     textIgnoreApp.text.setValue("")
   }
 
+  implicit class CustomWebViewEngine(engine: WebEngine) {
+    def doAfterLoadOnce(task: () => Unit): Unit = {
+      val changeListener = new ChangeListener[Number] {
+        override def changed(ov: value.ObservableValue[_ <: Number], old: Number, work: Number): Unit = {
+          if (kbWebView.engine.getLoadWorker.getTotalWork == work.doubleValue())
+            task()
+
+          engine.getLoadWorker.workDoneProperty().removeListener(this)
+        }
+      }
+
+      engine.getLoadWorker.workDoneProperty().addListener(changeListener)
+    }
+  }
+
   private def initTab(tab: Tab, icon: FontAwesomeIcon, tooltip: String): Unit = {
     tab.graphic = icon.toIcon(38.0)
     tab.tooltip = new Tooltip(tooltip).setDelay(TOOLTIP_DELAY)
   }
 
   private def tryResize(elemId: String, attr: String, value: Double): Unit = {
-    //if (kbWebView.engine.document == null)
-    //  return
+    if (kbWebView.engine.document == null)
+      return
 
     val elem = kbWebView.engine.document.getElementById(elemId)
-    //if (elem == null)
-    //  return
+    if (elem == null)
+      return
 
     elem.setAttribute(attr, value.toInt.toString + "px")
     println(attr + " to " + value)

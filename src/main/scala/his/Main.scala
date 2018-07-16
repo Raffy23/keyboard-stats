@@ -16,6 +16,8 @@ import scalafxml.core.NoDependencyResolver
 
 import scala.io.Source
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 /**
   * Created by: 
   *
@@ -32,7 +34,7 @@ object Main extends JFXApp {
 
   // Load stuff
   mkdirIfAbsent("./statistics/")
-  Statistics.syncFromDisk()()
+  private val statistics = Statistics.syncFromDisk()()
 
   mkdirIfAbsent("./config/")
   loadExcludedApps()
@@ -49,6 +51,7 @@ object Main extends JFXApp {
 
   loader.load()
   private val controller: JavaFXController = loader.getController[JavaFXController]
+  statistics.andThen { case (_) => controller.updateAfterLoaded() }
 
   private val WINDOW_WIDTH   = 893
   private val WINDOW_HEIGHT = 528
