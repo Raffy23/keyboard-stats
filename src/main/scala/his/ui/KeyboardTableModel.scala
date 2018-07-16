@@ -3,6 +3,7 @@ package his.ui
 import java.awt.event.KeyEvent
 
 import his.util.i18n._
+import scalafx.application.Platform
 import scalafx.beans.property.ReadOnlyStringWrapper
 import scalafx.scene.control.{TreeItem, TreeTableColumn, TreeTableView}
 
@@ -29,7 +30,8 @@ class KeyboardTableModel(table: TreeTableView[KeyDataProperty], data: TrieMap[In
 
   private val root = new TreeItem[KeyDataProperty]()
   table.root = root
-  update()
+
+  Platform.runLater(update())
 
   def update(): Unit = {
     root.children = data.map { case (keyCode, _) => new TreeItem(new KeyDataProperty(keyCode, data)) }.toSeq

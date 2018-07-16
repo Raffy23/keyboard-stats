@@ -72,11 +72,13 @@ import scala.util.Try
 
     // Set selected item for async refresh
     selected.set(transformer(selectedItem))
-    kbModel.set(new KeyboardTableModel(kbDataTable, Statistics.app(selectedItem)))
+    kbModel.set(new KeyboardTableModel(kbDataTable, if(selectedItem == "item.all".localize) Statistics.all() else Statistics.app(selectedItem)))
 
     // Re-load keymap from svg & render new content
-    kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(DEFAULT_KEYBOARD_LAYOUT))
-    kbWebView.engine.doAfterLoadOnce(() => selected.get().transform(kbWebView.engine))
+    Platform.runLater(() => {
+      kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(DEFAULT_KEYBOARD_LAYOUT))
+      kbWebView.engine.doAfterLoadOnce(() => selected.get().transform(kbWebView.engine))
+    })
   })
 
   lvIgnoreApps.items.get().addAll(InputGatherer.excludedApps)
