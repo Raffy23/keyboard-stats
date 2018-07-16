@@ -50,10 +50,14 @@ import scala.util.Try
   jfxNodeList.rotate = 180
   jfxNodeList.getStylesheets.add(stylesheet("fab"))
   jfxNodeList.addAnimatedNode(FAB(MaterialIcon.SAVE, "menu.save_btn".localize))
-  jfxNodeList.addAnimatedNode(SmallFAB(MaterialIcon.IMAGE, "tooltip.export_as_png".localize, () => { Future{
+  jfxNodeList.addAnimatedNode(SmallFAB(MaterialIcon.IMAGE, "tooltip.export_as_png".localize, () => { Future {
     SVGUtility.saveAs(DEFAULT_SAVE_PATH, "png", selected.get().transform().head, 776*2, 236*2)}
+    Platform.runLater(() => jfxNodeList.animateList(false))
   }))
-  jfxNodeList.addAnimatedNode(jfxButton("JSON", "tooltip.save_to_disk".localize, "fab-small", () => Statistics.syncToDisk()()))
+  jfxNodeList.addAnimatedNode(jfxButton("JSON", "tooltip.save_to_disk".localize, "fab-small", () => { Future {
+    Statistics.syncToDisk()()
+    Platform.runLater(() => jfxNodeList.animateList(false))
+  }}))
   nodeListContainer.children.add(jfxNodeList)
 
   // Init WebView
@@ -84,11 +88,14 @@ import scala.util.Try
   lvIgnoreApps.items.get().addAll(InputGatherer.excludedApps)
 
   // Register global listener
-  InputGatherer.listeners.add((_, keyCode, _) => update(keyCode))
+  InputGatherer.listeners.add((_, keyCode, app) => update(keyCode, app))
 
-  def update(keyCode: Int = -1): Unit = Platform.runLater(() => {
+  def update(keyCode: Int = -1, app: String = "item.all".localize): Unit = Platform.runLater(() => {
     selected.get().transform(kbWebView.engine)
-    if (keyCode > -1) kbModel.get().refresh(keyCode)
+
+    val selectedEntry = lvRecordedApps.selectionModel.value.getSelectedItems.get(0)
+    if (keyCode > -1 && (app == selectedEntry || selectedEntry == "item.all".localize))
+      kbModel.get().refresh(keyCode)
 
     statsToday.text = Statistics.getTodayKeys.toString
   })

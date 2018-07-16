@@ -9,6 +9,7 @@ import scalafx.beans.property.ObjectProperty
 import scalafx.scene.control.Tooltip
 
 import scala.collection.concurrent.TrieMap
+import scala.util.Try
 
 /**
   * Created by: 
