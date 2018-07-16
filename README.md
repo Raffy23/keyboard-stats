@@ -8,9 +8,10 @@ as a heatmap on the keyboard.
 * Display keyboard heatmap in customizable layout (SVG format)
 * Export Heatmap as svg or png
 * Currently supported layouts are: *Qwertz* and *Qwerty*
+* Save input data periodically and after program exit
 
 ## Keyboard layouts
-* Keyboard Layout must be a valid SVG Document
+* Keyboard Layout must be a valid SVG Document and the svg node must have the id `svg2`
 * The id attribute must be the `java.awt.KeyEvent.VK_*` Keycode *(can hex or decimal)*
 
 ## Notes
