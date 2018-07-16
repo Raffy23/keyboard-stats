@@ -46,9 +46,10 @@ import scala.xml.XML
 
   // Init WebView
   kbWebView.contextMenuEnabled = false
+  kbWebView.engine.userStyleSheetLocation = getClass.getResource("/javafx/svgViewer.css").toExternalForm
   kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(DEFAULT_KEYBOARD_LAYOUT))
-  kbWebView.widthProperty().asObject().addListener((_,_,size) => Try(tryResize("svg2", "width", size)).recover{ case ex: Exception => ex.printStackTrace() })
-  kbWebView.heightProperty().asObject().addListener((_,_,size) => Try(tryResize("svg2", "height", size)).recover{ case ex: Exception => ex.printStackTrace() })
+  kbWebView.width.addListener((_,_,size) => Try(tryResize("svg2", "width", size.doubleValue() - 28.0)).recover{ case ex: Exception => ex.printStackTrace() })
+  kbWebView.height.addListener((_,_,size) => Try(tryResize("svg2", "height", size.doubleValue())).recover{ case ex: Exception => ex.printStackTrace() })
 
   // Configure ListView selection Listener
   lvRecordedApps.items.get().addAll("item.all".localize)
@@ -111,12 +112,12 @@ import scala.xml.XML
   }
 
   private def tryResize(elemId: String, attr: String, value: Double): Unit = {
-    if (kbWebView.engine.document == null)
-      return
+    //if (kbWebView.engine.document == null)
+    //  return
 
     val elem = kbWebView.engine.document.getElementById(elemId)
-    if (elem == null)
-      return
+    //if (elem == null)
+    //  return
 
     elem.setAttribute(attr, value.toInt.toString + "px")
     println(attr + " to " + value)
