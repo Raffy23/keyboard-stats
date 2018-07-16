@@ -1,11 +1,14 @@
 package his.ui
 
-import com.jfoenix.controls.JFXTabPane
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject
+import com.jfoenix.controls.{JFXTreeTableView, _}
 import de.jensd.fx.glyphs.GlyphIcon
 import de.jensd.fx.glyphs.fontawesome.{FontAwesomeIcon, FontAwesomeIconView}
+import de.jensd.fx.glyphs.materialicons.{MaterialIcon, MaterialIconView}
 import javafx.animation.{KeyFrame, Timeline}
+import javafx.scene.text.Font
 import scalafx.scene.Node
-import scalafx.scene.control.Tooltip
+import scalafx.scene.control._
 import scalafx.util.Duration
 
 import scala.language.implicitConversions
@@ -18,17 +21,37 @@ import scala.language.implicitConversions
   */
 object Implicits {
 
-  implicit class sfxJFXTabPane(jFXTabPane: JFXTabPane) extends Node(jFXTabPane) { }
-  implicit class sfxFontAwesomeIconView(fontAwesomeIcon: FontAwesomeIconView) extends Node(fontAwesomeIcon) { }
+  implicit class sfxJFXTabPaneClass(jFXTabPane: JFXTabPane) extends Node(jFXTabPane) {}
+  implicit class sfxJFXListViewClass[T](jFXListView: JFXListView[T]) extends ListView[T](jFXListView) {}
+  implicit class sfxJFXNodesListClass(jFXNodesList: JFXNodesList) extends Node(jFXNodesList) {}
+  implicit class sfxJFXButtonClass(jFXButton: JFXButton) extends Button(jFXButton) {}
+  implicit class sfxJFXTreeTableColumnClass[S,T](jFXTreeTableColumn: JFXTreeTableColumn[S,T]) extends TreeTableColumn[S,T] { }
+  implicit class sfxJFXTreeTableView[T <: RecursiveTreeObject[T]](jFXTreeTableView: JFXTreeTableView[T]) extends TreeTableView[T] { }
+
+
+  implicit class sfxFontAwesomeIconView(fontAwesomeIcon: FontAwesomeIconView) extends Node(fontAwesomeIcon) {}
+  implicit class sfxMaterialIconView(materialIconView: MaterialIconView) extends Node(materialIconView) {}
 
   implicit class FontAwesomeIconConverter(icon: FontAwesomeIcon) {
-    def toIcon(size: Double = GlyphIcon.DEFAULT_ICON_SIZE): Node = {
+    def toIcon(size: Double = GlyphIcon.DEFAULT_ICON_SIZE): FontAwesomeIconView = {
       val result = new FontAwesomeIconView(icon)
       result.setGlyphSize(size)
 
       result
     }
   }
+
+  implicit class MaterialIconConverter(icon: MaterialIcon) {
+    def toIcon(size: Double = GlyphIcon.DEFAULT_ICON_SIZE): MaterialIconView = {
+      val result = new MaterialIconView(icon)
+      // BUG: in MaterialIconView, font is not set correctly!
+      result.setFont(new Font("Material Icons", size))
+      result.setGlyphSize(size)
+
+      result
+    }
+  }
+
 
   implicit class HakyTooltipClass(tooltip: Tooltip) {
     def setDelay(duration: Duration): Tooltip = {
@@ -55,5 +78,6 @@ object Implicits {
 
   implicit def integerToDuration(int: Int): Duration = new Duration(int)
 
+  def stylesheet(name: String): String = getClass.getResource("/javafx/"+name+".css").toExternalForm
 
 }

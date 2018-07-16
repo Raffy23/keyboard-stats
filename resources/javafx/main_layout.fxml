@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.web.*?>
-<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -16,11 +12,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="his.ui.JavaFXController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="his.ui.JavaFXController">
    <children>
       <TabPane layoutX="158.0" layoutY="162.0" prefHeight="200.0" prefWidth="200.0" side="LEFT" stylesheets="@tabpane.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
@@ -28,7 +26,6 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #FFF;">
                      <children>
-                        <WebView fx:id="kbWebView" disable="true" layoutX="14.0" layoutY="155.0" prefHeight="399.0" prefWidth="743.0" AnchorPane.bottomAnchor="66.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="169.0" />
                         <HBox layoutX="14.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #FFF;" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="55.0">
                            <children>
                               <VBox prefHeight="100.0" prefWidth="296.0" spacing="4.0">
@@ -59,7 +56,7 @@
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Label>
-                                    <ListView fx:id="lvRecordedApps" prefHeight="200.0" prefWidth="200.0" />
+                                    <JFXListView fx:id="lvRecordedApps" prefHeight="200.0" prefWidth="200.0" />
                                  </children>
                               </VBox>
                            </children>
@@ -70,17 +67,33 @@
                            </font>
                         </Label>
                         <Separator layoutX="14.0" layoutY="39.0" prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
-                        <HBox layoutX="78.0" layoutY="505.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="200.0" spacing="14.0" style="-fx-background-color: derive(#828282, 5%);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <JFXTabPane layoutX="14.0" layoutY="105.0" prefHeight="429.0" prefWidth="741.0" side="BOTTOM" stylesheets="@sub_tabpane.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="171.0">
+                           <tabs>
+                              <Tab closable="false" text="%tab.kbheatmap">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0">
+                                       <children>
+                                          <WebView fx:id="kbWebView" disable="true" prefHeight="399.0" prefWidth="743.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                              <Tab text="%tab.kbtable">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <JFXTreeTableView fx:id="kbDataTable" layoutX="60.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" stylesheets="@treetable.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                           </tabs>
+                        </JFXTabPane>
+                        <StackPane layoutX="675.0" layoutY="534.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
                            <children>
-                              <Button fx:id="btnSaveSVG" mnemonicParsing="false" text="%button.save_svg" />
-                              <Button fx:id="btnSavePNG" mnemonicParsing="false" text="%button.save_png" />
-                              <Button fx:id="btnSaveJSON" mnemonicParsing="false" text="%button.save_json" />
-                              <Button fx:id="btn_loadFromJson" mnemonicParsing="false" text="LOAD_FROM_JSON" />
+                              <Pane fx:id="nodeListContainer" prefHeight="58.0" prefWidth="58.0" />
                            </children>
-                           <padding>
-                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
-                           </padding>
-                        </HBox>
+                        </StackPane>
                      </children>
                   </AnchorPane>
             </content>
