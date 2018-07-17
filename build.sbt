@@ -20,7 +20,10 @@ libraryDependencies ++= Seq(
   "org.scalafx" %% "scalafxml-core-sfx8" % "0.4",
   "org.scalafx" %% "scalafx" % "8.0.144-R12",
   "com.jfoenix" % "jfoenix" % "8.0.5",
-  "de.jensd" % "fontawesomefx" % "8.9"
+  "de.jensd" % "fontawesomefx" % "8.9",
+
+  // misc stuff
+  "com.github.pureconfig" %% "pureconfig" % "0.9.0"
 )
 
 val circeVersion = "0.9.3"

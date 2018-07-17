@@ -2,13 +2,18 @@ package his.ui
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject
 import com.jfoenix.controls.{JFXTreeTableView, _}
-import de.jensd.fx.glyphs.GlyphIcon
+import de.jensd.fx.glyphs.{GlyphIcon, GlyphIcons}
 import de.jensd.fx.glyphs.fontawesome.{FontAwesomeIcon, FontAwesomeIconView}
+import de.jensd.fx.glyphs.materialdesignicons.{MaterialDesignIcon, MaterialDesignIconView}
 import de.jensd.fx.glyphs.materialicons.{MaterialIcon, MaterialIconView}
 import javafx.animation.{KeyFrame, Timeline}
 import javafx.scene.text.Font
-import scalafx.scene.Node
+import scalafx.scene.{Node, SnapshotParameters}
 import scalafx.scene.control._
+import javafx.scene.image.{Image => jfxImage}
+import javafx.scene.{Scene => jfxScene}
+import scalafx.scene.image.Image
+import scalafx.scene.paint.Color
 import scalafx.util.Duration
 
 import scala.language.implicitConversions
@@ -39,6 +44,18 @@ object Implicits {
 
       result
     }
+  }
+
+  implicit class MaterialDesignIconsConverter(icon: MaterialDesignIcon) {
+    def toIcon(size: Double = GlyphIcon.DEFAULT_ICON_SIZE): MaterialDesignIconView = {
+      val result = new MaterialDesignIconView(icon)
+      result.setGlyphSize(size)
+
+      result
+    }
+
+    def toImage(size: Double = GlyphIcon.DEFAULT_ICON_SIZE): Image = new Image(toIcon(size).toImage)
+
   }
 
   implicit class MaterialIconConverter(icon: MaterialIcon) {
@@ -77,6 +94,22 @@ object Implicits {
   }
 
   implicit def integerToDuration(int: Int): Duration = new Duration(int)
+
+  implicit class SnapshotableGlyphIcon[T <: Enum[T] with GlyphIcons](node: GlyphIcon[T]) {
+    def toImage: jfxImage = {
+      val label = new Label()
+      label.setGraphic(node)
+
+      val scene = new jfxScene(label)
+      scene.setFill(Color.Transparent)
+
+      val params = new SnapshotParameters()
+      params.setFill(Color.Transparent)
+
+      node.snapshot(params, null)
+    }
+  }
+
 
   def stylesheet(name: String): String = getClass.getResource("/javafx/"+name+".css").toExternalForm
 

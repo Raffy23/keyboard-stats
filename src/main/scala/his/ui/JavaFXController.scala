@@ -3,7 +3,7 @@ package his.ui
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
-import com.jfoenix.controls.{JFXNodesList, JFXTreeTableView}
+import com.jfoenix.controls.JFXNodesList
 import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import his.service.{InputGatherer, KeyboardLayoutService, Statistics}
 import his.ui.Defaults._

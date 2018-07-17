@@ -16,7 +16,6 @@ import scala.collection.concurrent.TrieMap
   * @version 16.07.2018
   */
 class KeyboardTableModel(table: TreeTableView[KeyDataProperty], data: TrieMap[Int, Long]) {
-  println("new " + data.hashCode())
 
   private val keyCodeColumn = new TreeTableColumn[KeyDataProperty, String]("table.keycode".localize)
   keyCodeColumn.cellValueFactory  = { p => ReadOnlyStringWrapper(KeyEvent.getKeyText(p.value.value.value.keyCode.value)) }
