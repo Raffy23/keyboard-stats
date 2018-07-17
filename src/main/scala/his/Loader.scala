@@ -18,6 +18,9 @@ import util.i18n._
 import ui.Implicits._
 import scalafx.embed.swing.SwingFXUtils
 
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 /**
   * Created by: 
   *
@@ -35,8 +38,7 @@ object Loader extends App {
 
   private var uiPresent = false
   private val instanceMutex = new SingleInstanceService("show", {
-    case "show" if uiPresent  => Platform.runLater(() => MainJFXWindow.stage.show())
-    case "show" if !uiPresent => MainJFXWindow.main(args); uiPresent = true
+    case "show" => showUI()
   })
 
   if (!instanceMutex.isFirstInstance) {
@@ -76,7 +78,7 @@ object Loader extends App {
 
       popup.add(exitItem)
       trayIcon.setPopupMenu(popup)
-      trayIcon.addActionListener((_) => Platform.runLater(() => MainJFXWindow.stage.show()))
+      trayIcon.addActionListener((_) => showUI())
 
       SystemTray.getSystemTray.add(trayIcon)
     })
@@ -85,8 +87,7 @@ object Loader extends App {
   if (args.contains("--start-background-service")) {
     println("Started minimized in systemtry!")
   } else {
-    uiPresent = true
-    MainJFXWindow.main(args)
+    showUI()
   }
 
   def destroy(): Unit = {
@@ -106,6 +107,15 @@ object Loader extends App {
     Platform.exit()
     System.exit(0) // AWT Event Queue still running, how kill?
   }
+
+  private def showUI(): Unit =
+    if (uiPresent) {
+      Platform.runLater(() => MainJFXWindow.stage.show())
+    } else {
+      uiPresent = true
+      Future { MainJFXWindow.main(args) }
+    }
+
 
 
   private def mkdirIfAbsent(path: String): Unit = {
