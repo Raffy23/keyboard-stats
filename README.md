@@ -19,6 +19,10 @@ as a heatmap on the keyboard.
 * The [Qwerty](https://commons.wikimedia.org/wiki/File:Qwerty.svg) and [Qwertz](https://commons.wikimedia.org/wiki/File:Qwertz_de.svg) 
 keyboard layouts are modified versions from Wikimedia 
 
+## Issues
+* Only todays statistics are shown
+* Statistics are in plain text and not encrypted on disk
+
 ## Dependencies
 * **JNA** 4.5.1 
 * **Batik** 1.10
