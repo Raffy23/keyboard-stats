@@ -1,5 +1,7 @@
 package keyboardstats.ui
 
+import keyboardstats.util.AppConfig
+
 /**
   * Created by: 
   *
@@ -8,6 +10,6 @@ package keyboardstats.ui
   */
 object Defaults {
   val TOOLTIP_DELAY = 250
-  val DEFAULT_KEYBOARD_LAYOUT = "qwertz"
+  lazy val DEFAULT_KEYBOARD_LAYOUT: String = AppConfig.conf.keyboardLayout
   val DEFAULT_SAVE_PATH = "./output"
 }

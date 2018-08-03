@@ -12,7 +12,8 @@ import scala.io.Source
   */
 object AppConfig {
 
-  case class Config(language: Option[String], configDirectory: String, statisticsDirectory: String)
+  case class Config(language: Option[String], configDirectory: String, statisticsDirectory: String,
+                    keyboardLayout: String)
 
   val conf: Config = {
     val confString: String = Source.fromFile("./application.conf").getLines().mkString("\n")
