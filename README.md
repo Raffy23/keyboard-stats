@@ -1,7 +1,7 @@
 Keyboard Statistics
 ===================
 Small open source utility program to record keyboard usage in multiple applications and display them
-as a heatmap on the keyboard.
+as a heatmap
 
 ## Features
 * Record key presses with direct input api in windows
