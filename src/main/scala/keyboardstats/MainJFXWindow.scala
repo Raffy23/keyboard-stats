@@ -1,13 +1,12 @@
 package keyboardstats
 
+import javafx.{scene => jfxs}
 import keyboardstats.service.Statistics
 import keyboardstats.ui.{CustomFXMLLoader, JavaFXController}
 import keyboardstats.util.i18n._
-import javafx.{scene => jfxs}
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
-import scalafx.scene.control.{Alert, ButtonType}
 import scalafxml.core.NoDependencyResolver
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,12 +43,14 @@ object MainJFXWindow extends JFXApp {
     controller.shutdownBackgroundTasks()
     event.consume()
 
-    // TODO: maybe custom alert?
-    val alert = new Alert(Alert.AlertType.Confirmation, "alert.close_or_minimize".localize, ButtonType.OK, ButtonType.Close).showAndWait()
-    alert.foreach {
-      case ButtonType.OK => stage.hide()
-      case ButtonType.Close => Loader.destroy()
-    }
+    controller.showDialog(
+      "alert.close_or_minimize.heading".localize,
+      "alert.close_or_minimize.content".localize,
+      List(
+        ("minimize".localize, () => { stage.hide(); true }),
+        ("close".localize, () => { stage.hide(); Loader.destroy(); true })
+      )
+    )
   }
 
 }

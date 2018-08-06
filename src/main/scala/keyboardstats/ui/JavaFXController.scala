@@ -3,7 +3,7 @@ package keyboardstats.ui
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
-import com.jfoenix.controls.JFXNodesList
+import com.jfoenix.controls.{JFXButton, JFXDialog, JFXDialogLayout, JFXNodesList}
 import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import keyboardstats.service.{InputGatherer, KeyboardLayoutService, Statistics}
 import keyboardstats.ui.Defaults._
@@ -12,9 +12,11 @@ import keyboardstats.util.i18n._
 import keyboardstats.util.{HeatmapGenerator, SVGUtility}
 import javafx.beans.value
 import javafx.beans.value.ChangeListener
+import javafx.scene.Node
+import javafx.scene.text.Text
 import scalafx.application.Platform
 import scalafx.scene.control._
-import scalafx.scene.layout.Pane
+import scalafx.scene.layout.{Pane, StackPane}
 import scalafx.scene.web.{WebEngine, WebView}
 import scalafxml.core.macros.sfxml
 
@@ -32,7 +34,8 @@ import scala.util.Try
 @sfxml class JavaFXController(kbWebView: WebView, lvRecordedApps: ListView[String], tabKeyboard: Tab,
                               tabSettings: Tab, statsToday: Label, statsMonth: Label, statsYear: Label,
                               statsAllTime: Label, lvIgnoreApps: ListView[String], textIgnoreApp: TextField,
-                              nodeListContainer: Pane, btnIgnoreApp: Button, kbDataTable: TreeTableView[KeyDataProperty]) {
+                              nodeListContainer: Pane, btnIgnoreApp: Button, kbDataTable: TreeTableView[KeyDataProperty],
+                              dialogStackPane: StackPane) {
 
   private val backgroundTasks = new ScheduledThreadPoolExecutor(1)
   private val transformer = new mutable.HashMap[String, HeatmapGenerator]()
@@ -161,6 +164,26 @@ import scala.util.Try
     syncStats.cancel(false)
 
     backgroundTasks.shutdown()
+  }
+
+  def showDialog(heading: String, content: String, buttons: List[(String, () => Boolean)]): Unit = {
+    import scala.collection.JavaConverters._
+
+    val diagContent = new JFXDialogLayout()
+    val dialog = new JFXDialog(dialogStackPane, diagContent, JFXDialog.DialogTransition.CENTER)
+    diagContent.setHeading(new Text(heading))
+    diagContent.setBody(new Text(content))
+    diagContent.setActions(
+      buttons.map { case (name, action) =>
+        val btn = new JFXButton(name)
+        btn.setButtonType(JFXButton.ButtonType.RAISED)
+        btn.setOnAction((_) => if (action()) dialog.close())
+
+        btn
+      }.asJava
+    )
+
+    dialog.show()
   }
 
 }

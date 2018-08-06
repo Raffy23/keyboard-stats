@@ -20,107 +20,111 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="keyboardstats.ui.JavaFXController">
    <children>
-      <TabPane layoutX="158.0" layoutY="162.0" prefHeight="200.0" prefWidth="200.0" side="LEFT" stylesheets="@tabpane.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <tabs>
-          <Tab fx:id="tabKeyboard" closable="false">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #FFF;">
-                     <children>
-                        <HBox layoutX="14.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #FFF;" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="55.0">
+      <StackPane fx:id="dialogStackPane" prefHeight="150.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <TabPane prefHeight="200.0" prefWidth="200.0" side="LEFT" stylesheets="@tabpane.css" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab fx:id="tabKeyboard" closable="false">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #FFF;">
                            <children>
-                              <VBox prefHeight="100.0" prefWidth="296.0" spacing="4.0">
+                              <HBox layoutX="14.0" layoutY="42.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #FFF;" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="55.0">
                                  <children>
-                                    <Label text="%subheader.statistics">
-                                       <font>
-                                          <Font name="System Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <AnchorPane prefHeight="79.0" prefWidth="224.0">
+                                    <VBox prefHeight="100.0" prefWidth="296.0" spacing="4.0">
                                        <children>
-                                          <Label layoutX="14.0" layoutY="6.0" text="%stats.today" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="4.0" />
-                                          <Label layoutY="15.0" text="%stats.month" visible="false" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="20.0" />
-                                          <Label layoutX="-7.0" layoutY="31.0" text="%stats.year" visible="false" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="36.0" />
-                                          <Label layoutY="48.0" text="%stats.4ever" visible="false" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="52.0" />
-                                          <Label fx:id="statsToday" layoutX="99.0" layoutY="4.0" text="0" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="4.0" />
-                                          <Label fx:id="statsMonth" layoutX="99.0" layoutY="20.0" text="0" visible="false" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="20.0" />
-                                          <Label fx:id="statsYear" layoutX="99.0" layoutY="36.0" text="0" visible="false" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="36.0" />
-                                          <Label fx:id="statsAllTime" layoutX="99.0" layoutY="52.0" text="0" visible="false" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="52.0" />
+                                          <Label text="%subheader.statistics">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <AnchorPane prefHeight="79.0" prefWidth="224.0">
+                                             <children>
+                                                <Label layoutX="14.0" layoutY="6.0" text="%stats.today" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="4.0" />
+                                                <Label layoutY="15.0" text="%stats.month" visible="false" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="20.0" />
+                                                <Label layoutX="-7.0" layoutY="31.0" text="%stats.year" visible="false" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="36.0" />
+                                                <Label layoutY="48.0" text="%stats.4ever" visible="false" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="52.0" />
+                                                <Label fx:id="statsToday" layoutX="99.0" layoutY="4.0" text="0" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="4.0" />
+                                                <Label fx:id="statsMonth" layoutX="99.0" layoutY="20.0" text="0" visible="false" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="20.0" />
+                                                <Label fx:id="statsYear" layoutX="99.0" layoutY="36.0" text="0" visible="false" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="36.0" />
+                                                <Label fx:id="statsAllTime" layoutX="99.0" layoutY="52.0" text="0" visible="false" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="52.0" />
+                                             </children>
+                                          </AnchorPane>
                                        </children>
-                                    </AnchorPane>
+                                    </VBox>
+                                    <VBox prefHeight="100.0" prefWidth="258.0" spacing="4.0">
+                                       <children>
+                                          <Label text="%subheader.recApps">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXListView fx:id="lvRecordedApps" prefHeight="200.0" prefWidth="200.0" />
+                                       </children>
+                                    </VBox>
                                  </children>
-                              </VBox>
-                              <VBox prefHeight="100.0" prefWidth="258.0" spacing="4.0">
+                              </HBox>
+                              <Label layoutX="14.0" layoutY="23.0" text="%header.keyboard" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Separator layoutX="14.0" layoutY="39.0" prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
+                              <JFXTabPane layoutX="14.0" layoutY="105.0" prefHeight="429.0" prefWidth="741.0" side="BOTTOM" stylesheets="@sub_tabpane.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="171.0">
+                                 <tabs>
+                                    <Tab closable="false" text="%tab.kbheatmap">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0">
+                                             <children>
+                                                <WebView fx:id="kbWebView" disable="true" prefHeight="399.0" prefWidth="743.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </Tab>
+                                    <Tab text="%tab.kbtable">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <JFXTreeTableView fx:id="kbDataTable" layoutX="60.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" stylesheets="@treetable.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </Tab>
+                                 </tabs>
+                              </JFXTabPane>
+                              <StackPane layoutX="675.0" layoutY="534.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
                                  <children>
-                                    <Label text="%subheader.recApps">
-                                       <font>
-                                          <Font name="System Bold" size="12.0" />
-                                       </font>
-                                    </Label>
-                                    <JFXListView fx:id="lvRecordedApps" prefHeight="200.0" prefWidth="200.0" />
+                                    <Pane fx:id="nodeListContainer" prefHeight="58.0" prefWidth="58.0" />
                                  </children>
-                              </VBox>
+                              </StackPane>
                            </children>
-                        </HBox>
-                        <Label layoutX="14.0" layoutY="23.0" text="%header.keyboard" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
-                           <font>
-                              <Font size="24.0" />
-                           </font>
-                        </Label>
-                        <Separator layoutX="14.0" layoutY="39.0" prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
-                        <JFXTabPane layoutX="14.0" layoutY="105.0" prefHeight="429.0" prefWidth="741.0" side="BOTTOM" stylesheets="@sub_tabpane.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="171.0">
-                           <tabs>
-                              <Tab closable="false" text="%tab.kbheatmap">
-                                <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0">
-                                       <children>
-                                          <WebView fx:id="kbWebView" disable="true" prefHeight="399.0" prefWidth="743.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                       </children>
-                                    </AnchorPane>
-                                </content>
-                              </Tab>
-                              <Tab text="%tab.kbtable">
-                                <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                       <children>
-                                          <JFXTreeTableView fx:id="kbDataTable" layoutX="60.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" stylesheets="@treetable.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                       </children>
-                                    </AnchorPane>
-                                </content>
-                              </Tab>
-                           </tabs>
-                        </JFXTabPane>
-                        <StackPane layoutX="675.0" layoutY="534.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab fx:id="tabSettings" closable="false">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #FFF;">
                            <children>
-                              <Pane fx:id="nodeListContainer" prefHeight="58.0" prefWidth="58.0" />
+                              <Label text="%header.settings" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Separator prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
+                              <ListView fx:id="lvIgnoreApps" layoutX="14.0" layoutY="88.0" prefHeight="461.0" prefWidth="240.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="88.0" />
+                              <TextField fx:id="textIgnoreApp" layoutX="296.0" layoutY="300.0" promptText="%prompt.ignoreapp" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+                              <Button fx:id="btnIgnoreApp" layoutX="171.0" layoutY="561.0" mnemonicParsing="false" text="%button.add" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="171.0" />
+                              <Label layoutX="29.0" layoutY="79.0" text="%subheader.ignoreapps" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="65.0">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
                            </children>
-                        </StackPane>
-                     </children>
-                  </AnchorPane>
-            </content>
-          </Tab>
-          <Tab fx:id="tabSettings" closable="false">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #FFF;">
-                     <children>
-                        <Label text="%header.settings" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
-                           <font>
-                              <Font size="24.0" />
-                           </font>
-                        </Label>
-                        <Separator prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
-                        <ListView fx:id="lvIgnoreApps" layoutX="14.0" layoutY="88.0" prefHeight="461.0" prefWidth="240.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="88.0" />
-                        <TextField fx:id="textIgnoreApp" layoutX="296.0" layoutY="300.0" promptText="%prompt.ignoreapp" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-                        <Button fx:id="btnIgnoreApp" layoutX="171.0" layoutY="561.0" mnemonicParsing="false" text="%button.add" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="171.0" />
-                        <Label layoutX="29.0" layoutY="79.0" text="%subheader.ignoreapps" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="65.0">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-            </content>
-          </Tab>
-        </tabs>
-      </TabPane>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>
