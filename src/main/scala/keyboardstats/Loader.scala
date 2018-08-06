@@ -20,6 +20,7 @@ import scalafx.embed.swing.SwingFXUtils
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import keyboardstats.ui.Defaults._
 
 /**
   * Created by: 
@@ -59,6 +60,7 @@ object Loader extends App {
   )
 
   if (!SystemTray.isSupported) {
+    println("alert.systray_not_supported".localize)
     Platform.runLater(() => new Alert(Alert.AlertType.Error, "alert.systray_not_supported".localize).show())
   } else {
     new JFXPanel() // boot JavaFX Toolkit
@@ -99,7 +101,7 @@ object Loader extends App {
     import io.circe.syntax._
     import scala.collection.JavaConverters._
 
-    val writer = new PrintWriter(new File(AppConfig.conf.configDirectory + "excluded_apps.json"))
+    val writer = new PrintWriter(new File(EXCLUDED_APPS_FILE))
     writer.print(InputGatherer.excludedApps.asScala.asJson.noSpaces)
     writer.flush()
     writer.close()
@@ -125,12 +127,12 @@ object Loader extends App {
   }
 
   private def loadExcludedApps(): Unit = {
-    if (new File(AppConfig.conf.configDirectory + "excluded_apps.json").exists()) {
+    if (new File(EXCLUDED_APPS_FILE).exists()) {
       import io.circe.parser._
 
       import scala.collection.JavaConverters._
       InputGatherer.excludedApps.addAll(
-        decode[List[String]](Source.fromFile(AppConfig.conf.configDirectory + "excluded_apps.json").getLines().mkString).fold(
+        decode[List[String]](Source.fromFile(EXCLUDED_APPS_FILE).getLines().mkString).fold(
           (_) => List.empty[String],
           (v) => v
         ).asJavaCollection
