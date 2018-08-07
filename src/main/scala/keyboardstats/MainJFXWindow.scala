@@ -20,7 +20,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object MainJFXWindow extends JFXApp {
 
   private val loader = new CustomFXMLLoader(getClass.getResource("/javafx/main_layout.fxml"), NoDependencyResolver)
-  loader.load()
+  try { loader.load() } catch { case ex: Exception => ex.printStackTrace(); Loader.destroy() }
 
   private val controller: JavaFXController = loader.getController[JavaFXController]
   Statistics.syncFromDisk()().andThen { case (_) => controller.updateAfterLoaded() }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -15,6 +16,7 @@
     </controller>
   </properties>
 
+  
   <children>
     <Label text="%header.settings" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
       <font>
@@ -22,13 +24,26 @@
       </font>
     </Label>
     <Separator prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
-    <ListView fx:id="lvIgnoreApps" layoutX="14.0" layoutY="88.0" prefHeight="461.0" prefWidth="240.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="88.0" />
-    <TextField fx:id="textIgnoreApp" layoutX="296.0" layoutY="300.0" promptText="%prompt.ignoreapp" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-    <Button fx:id="btnIgnoreApp" layoutX="171.0" layoutY="561.0" mnemonicParsing="false" text="%button.add" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="171.0" />
+    <JFXListView fx:id="lvIgnoreApps" layoutX="14.0" layoutY="88.0" prefHeight="461.0" prefWidth="240.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="88.0" />
+    <JFXTextField fx:id="textIgnoreApp" layoutX="296.0" layoutY="300.0" promptText="%prompt.ignoreapp" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+    <JFXButton fx:id="btnIgnoreApp" buttonType="RAISED" layoutX="171.0" layoutY="561.0" mnemonicParsing="false" prefWidth="85.0" text="%button.add" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="171.0" />
     <Label layoutX="29.0" layoutY="79.0" text="%subheader.ignoreapps" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="65.0">
       <font>
         <Font name="System Bold" size="12.0" />
       </font>
     </Label>
+      <Separator layoutX="302.0" layoutY="65.0" orientation="VERTICAL" prefHeight="464.0" prefWidth="5.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="302.0" AnchorPane.topAnchor="65.0" />
+      <Label layoutX="377.0" layoutY="104.0" text="%settings.keyboardlayout" AnchorPane.leftAnchor="377.0" AnchorPane.topAnchor="104.0" />
+      <JFXComboBox fx:id="cbKeyboardLayout" layoutX="571.0" layoutY="100.0" prefHeight="25.0" prefWidth="199.0" promptText="%prompt.keyboardlayout" AnchorPane.leftAnchor="571.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="100.0" />
+      <Label layoutX="377.0" layoutY="142.0" text="%settings.statspath" AnchorPane.leftAnchor="377.0" AnchorPane.topAnchor="142.0" />
+      <Label layoutX="333.0" layoutY="65.0" text="%subheader.additionalsettings" AnchorPane.leftAnchor="333.0" AnchorPane.topAnchor="65.0">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="textDefaultPath" layoutX="570.0" layoutY="138.0" prefHeight="25.0" prefWidth="201.0" promptText="%prompt.defaultpath" AnchorPane.leftAnchor="570.0" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="138.0" />
+      <JFXButton fx:id="btnSubmitChanges" buttonType="RAISED" defaultButton="true" layoutX="750.0" layoutY="489.0" mnemonicParsing="false" style="-fx-background-color: #89a1ed;" text="%button.submit" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+      <Label layoutX="377.0" layoutY="180.0" text="%settings.imagepath" AnchorPane.leftAnchor="377.0" AnchorPane.topAnchor="180.0" />
+      <JFXTextField fx:id="textExportPath" layoutX="570.0" layoutY="176.0" prefHeight="25.0" prefWidth="201.0" promptText="%prompt.defaultpath" AnchorPane.leftAnchor="570.0" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="176.0" />
   </children>
 </AnchorPane>

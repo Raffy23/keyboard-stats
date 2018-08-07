@@ -12,6 +12,7 @@ import scalafx.scene.{Node, SnapshotParameters}
 import scalafx.scene.control._
 import javafx.scene.image.{Image => jfxImage}
 import javafx.scene.{Scene => jfxScene}
+import scalafx.beans.property.StringProperty
 import scalafx.scene.image.Image
 import scalafx.scene.paint.Color
 import scalafx.util.Duration
@@ -32,7 +33,6 @@ object Implicits {
   implicit class sfxJFXButtonClass(jFXButton: JFXButton) extends Button(jFXButton) {}
   implicit class sfxJFXTreeTableColumnClass[S,T](jFXTreeTableColumn: JFXTreeTableColumn[S,T]) extends TreeTableColumn[S,T] { }
   implicit class sfxJFXTreeTableView[T <: RecursiveTreeObject[T]](jFXTreeTableView: JFXTreeTableView[T]) extends TreeTableView[T] { }
-
 
   implicit class sfxFontAwesomeIconView(fontAwesomeIcon: FontAwesomeIconView) extends Node(fontAwesomeIcon) {}
   implicit class sfxMaterialIconView(materialIconView: MaterialIconView) extends Node(materialIconView) {}
@@ -115,5 +115,7 @@ object Implicits {
   implicit class RichControllerNode(node: javafx.scene.Node) {
     def getController[T]: T = node.getProperties.get("controller").asInstanceOf[T]
   }
+
+  implicit def stringPropertyToString(property: StringProperty): String = property.value
 
 }

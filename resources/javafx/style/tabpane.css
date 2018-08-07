@@ -26,9 +26,9 @@
 }
 
 .jfx-tab-pane .tab-selected-line {
-  -fx-border-color: #242424;
+  -fx-border-color: #4059a9;
 }
 
 .jfx-tab-pane .tab-header-area .jfx-rippler {
-  -jfx-rippler-fill: #242424;
+  -jfx-rippler-fill: #4059a9;
 }

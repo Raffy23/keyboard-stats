@@ -1,8 +1,13 @@
 package keyboardstats.ui
 
-import keyboardstats.service.InputGatherer
-import scalafx.scene.control.{Button, ListView, TextField}
+import com.jfoenix.controls.{JFXButton, JFXComboBox, JFXTextField}
+import javafx.fxml.FXML
+import keyboardstats.service.{InputGatherer, KeyboardLayoutService}
+import scalafx.scene.control.{ListView, TextField}
 import scalafxml.core.macros.sfxml
+
+import scala.collection.JavaConverters._
+import Implicits._
 
 /**
   * Created by: 
@@ -10,9 +15,18 @@ import scalafxml.core.macros.sfxml
   * @author Raphael
   * @version 07.08.2018
   */
-@sfxml class SettingsController(lvIgnoreApps: ListView[String], textIgnoreApp: TextField, btnIgnoreApp: Button) {
+@sfxml class SettingsController(lvIgnoreApps: ListView[String], textIgnoreApp: TextField, @FXML btnIgnoreApp: JFXButton,
+                                @FXML cbKeyboardLayout: JFXComboBox[String], @FXML btnSubmitChanges: JFXButton,
+                                @FXML textExportPath: JFXTextField, @FXML textDefaultPath: JFXTextField) {
 
   lvIgnoreApps.items.get().addAll(InputGatherer.excludedApps)
+
+  textDefaultPath.textProperty().bindBidirectional(Defaults.DEFAULT_STATISTICS_PATH)
+  textExportPath.textProperty().bindBidirectional(Defaults.DEFAULT_EXPORT_PATH)
+
+  cbKeyboardLayout.getItems.addAll(KeyboardLayoutService.layouts.keys.asJavaCollection)
+  cbKeyboardLayout.getSelectionModel.select(Defaults.DEFAULT_KEYBOARD_LAYOUT.value)
+  cbKeyboardLayout.getSelectionModel.selectedItemProperty().addListener((_,_,newValue) => Defaults.DEFAULT_KEYBOARD_LAYOUT.value = newValue)
 
   btnIgnoreApp.onAction = (_) => {
     if (textIgnoreApp.text.value.nonEmpty) {
@@ -21,6 +35,11 @@ import scalafxml.core.macros.sfxml
     }
 
     textIgnoreApp.text.setValue("")
+  }
+
+  btnSubmitChanges.onAction = (_) => {
+    //TODO:
+    println("Saving USER_CONFIG_FILE is not implemented!")
   }
 
 }

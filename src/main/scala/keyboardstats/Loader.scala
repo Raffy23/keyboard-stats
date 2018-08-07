@@ -52,7 +52,9 @@ object Loader extends App {
   Platform.implicitExit = false
   mkdirIfAbsent(AppConfig.conf.statisticsDirectory)
   mkdirIfAbsent(AppConfig.conf.configDirectory)
+
   loadExcludedApps()
+  loadUserConfig()
 
   InputGatherer.globalKeyListener.start()
   InputGatherer.listeners.add((_: KeyEventListener.KeyEventType, keyCode: Int, app: String) =>
@@ -137,6 +139,13 @@ object Loader extends App {
           (v) => v
         ).asJavaCollection
       )
+    }
+  }
+
+  private def loadUserConfig(): Unit = {
+    if (new File(USER_CONFIG_FILE).exists()) {
+      //TODO:
+      println("Read USER_CONFIG_FILE not implemented")
     }
   }
 

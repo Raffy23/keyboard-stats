@@ -8,6 +8,7 @@ import scala.concurrent.Future
 import scala.io.Source
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import keyboardstats.ui.Defaults._
 
 /**
   * Created by: 
@@ -27,9 +28,8 @@ object Statistics {
     }
   }
 
-
   def DEFAULT_SAVE_FILE(day: LocalDate = LocalDate.now()) =
-    s"./statistics/${day.getDayOfMonth}-${day.getMonthValue}-${day.getYear}.json"
+    s"./${DEFAULT_STATISTICS_PATH.value}/${day.getDayOfMonth}-${day.getMonthValue}-${day.getYear}.json"
 
   private val aggrStats = new TrieMap[LocalDate, KeyRecords]()
   private val statistics = new TrieMap[LocalDate, Record]()

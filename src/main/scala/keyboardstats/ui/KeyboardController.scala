@@ -6,9 +6,9 @@ import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 import com.jfoenix.controls.JFXNodesList
 import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import javafx.beans.value
-import javafx.beans.value.ChangeListener
+import javafx.beans.value.{ChangeListener, ObservableValue}
 import keyboardstats.service.{InputGatherer, KeyboardLayoutService, Statistics}
-import keyboardstats.ui.Defaults.{DEFAULT_KEYBOARD_LAYOUT, DEFAULT_SAVE_PATH}
+import keyboardstats.ui.Defaults.{DEFAULT_KEYBOARD_LAYOUT, DEFAULT_EXPORT_PATH}
 import keyboardstats.ui.Implicits._
 import keyboardstats.util.i18n._
 import keyboardstats.util.{HeatmapGenerator, SVGUtility}
@@ -21,7 +21,6 @@ import scalafxml.core.macros.sfxml
 import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.Try
 
 /**
   * Created by: 
@@ -47,7 +46,7 @@ import scala.util.Try
   jfxNodeList.getStylesheets.add(stylesheet("fab"))
   jfxNodeList.addAnimatedNode(FAB(MaterialIcon.SAVE, "menu.save_btn".localize))
   jfxNodeList.addAnimatedNode(SmallFAB(MaterialIcon.IMAGE, "tooltip.export_as_png".localize, () => { Future {
-    SVGUtility.saveAs(DEFAULT_SAVE_PATH, "png", selected.get().transform().head, 776*2, 236*2)}
+    SVGUtility.saveAs(DEFAULT_EXPORT_PATH, "png", selected.get().transform().head, 776*2, 236*2)}
     Platform.runLater(() => jfxNodeList.animateList(false))
   }))
   jfxNodeList.addAnimatedNode(jfxButton("JSON", "tooltip.save_to_disk".localize, "fab-small", () => { Future {
@@ -60,8 +59,17 @@ import scala.util.Try
   kbWebView.contextMenuEnabled = false
   kbWebView.engine.userStyleSheetLocation = stylesheet("svgViewer")
   kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(DEFAULT_KEYBOARD_LAYOUT))
-  kbWebView.width.addListener((_,_,size) => Try(tryResize("svg2", "width", size.doubleValue() - 28.0)).recover{ case ex: Exception => ex.printStackTrace() })
-  kbWebView.height.addListener((_,_,size) => Try(tryResize("svg2", "height", size.doubleValue())).recover{ case ex: Exception => ex.printStackTrace() })
+  kbWebView.width.addListener((_,_,size) => tryResize("svg2", "width", size.doubleValue() - 28.0))
+  kbWebView.height.addListener((_,_,size) => tryResize("svg2", "height", size.doubleValue()))
+
+  private val layoutChangeListener = new ChangeListener[String] {
+    override def changed(observable: ObservableValue[_ <: String], oldValue: String, newValue: String): Unit = {
+      kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(newValue))
+      kbWebView.engine.doAfterLoadOnce(() => selected.get().transform(kbWebView.engine))
+    }
+  }
+  DEFAULT_KEYBOARD_LAYOUT.addListener(layoutChangeListener)
+
 
   // Configure ListView selection Listener
   lvRecordedApps.items.get().addAll("item.all".localize)
@@ -89,6 +97,7 @@ import scala.util.Try
     syncStats.cancel(false)
 
     backgroundTasks.shutdown()
+    DEFAULT_KEYBOARD_LAYOUT.removeListener(layoutChangeListener)
   }
 
   def update(keyCode: Int = -1, app: String = "item.all".localize): Unit = Platform.runLater(() => {
