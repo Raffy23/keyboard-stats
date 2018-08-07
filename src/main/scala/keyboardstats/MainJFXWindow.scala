@@ -2,7 +2,7 @@ package keyboardstats
 
 import javafx.{scene => jfxs}
 import keyboardstats.service.Statistics
-import keyboardstats.ui.{CustomFXMLLoader, JavaFXController}
+import keyboardstats.ui.{CustomFXMLLoader, JavaFXController, KeyboardController}
 import keyboardstats.util.i18n._
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage

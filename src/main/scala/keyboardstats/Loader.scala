@@ -33,8 +33,8 @@ object Loader extends App {
   // Load language settings
   AppConfig.conf.language.foreach(lang => Locale.setDefault(Locale.forLanguageTag(lang)))
   if (!LanguageManager.isCurrentLangSupported) {
+    System.err.println(s"ERROR: Locale '${Locale.getDefault}' is not supported, falling back to ${Locale.ENGLISH}!")
     Locale.setDefault(Locale.ENGLISH)
-    println("Error Locale is not supported, falling back to english!")
   }
 
   private var uiPresent = false

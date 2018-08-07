@@ -4,6 +4,10 @@ scalaVersion := "2.12.6"
 
 resourceDirectory in Compile := baseDirectory.value / "resources"
 
+//scaacOptions ++= Seq(
+//  "-Ymacro-debug-verbose"
+//)
+
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
 
 libraryDependencies ++= Seq(
