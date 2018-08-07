@@ -16,6 +16,6 @@ object Defaults {
   val DEFAULT_EXPORT_PATH: StringProperty = StringProperty("./output")
   val DEFAULT_STATISTICS_PATH: StringProperty = StringProperty("./statistics")
 
-  lazy val EXCLUDED_APPS_FILE: String = AppConfig.conf.configDirectory + "excluded_apps.json"
-  lazy val USER_CONFIG_FILE: String = AppConfig.conf.configDirectory + "user_config.json"
+  val EXCLUDED_APPS_FILE: String = AppConfig.conf.configDirectory + "excluded_apps.json"
+  val USER_CONFIG_FILE: String = AppConfig.conf.configDirectory + "user_config.json"
 }

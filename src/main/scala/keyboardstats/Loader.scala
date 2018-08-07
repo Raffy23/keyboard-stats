@@ -7,7 +7,7 @@ import java.util.Locale
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon
 import keyboardstats.service.{InputGatherer, SingleInstanceService, Statistics}
-import keyboardstats.util.{AppConfig, KeyEventListener}
+import keyboardstats.util.{AppConfig, KeyEventListener, UserConfig}
 import keyboardstats.util.i18n.LanguageManager
 import javafx.embed.swing.JFXPanel
 import scalafx.application.Platform
@@ -144,8 +144,7 @@ object Loader extends App {
 
   private def loadUserConfig(): Unit = {
     if (new File(USER_CONFIG_FILE).exists()) {
-      //TODO:
-      println("Read USER_CONFIG_FILE not implemented")
+      UserConfig.load()
     }
   }
 

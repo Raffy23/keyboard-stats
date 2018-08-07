@@ -8,6 +8,7 @@ import scalafxml.core.macros.sfxml
 
 import scala.collection.JavaConverters._
 import Implicits._
+import keyboardstats.util.UserConfig
 
 /**
   * Created by: 
@@ -37,9 +38,6 @@ import Implicits._
     textIgnoreApp.text.setValue("")
   }
 
-  btnSubmitChanges.onAction = (_) => {
-    //TODO:
-    println("Saving USER_CONFIG_FILE is not implemented!")
-  }
+  btnSubmitChanges.onAction = (_) => UserConfig.save()
 
 }
