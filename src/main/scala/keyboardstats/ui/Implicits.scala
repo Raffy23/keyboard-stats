@@ -31,8 +31,9 @@ object Implicits {
   implicit class sfxJFXListViewClass[T](jFXListView: JFXListView[T]) extends ListView[T](jFXListView) {}
   implicit class sfxJFXNodesListClass(jFXNodesList: JFXNodesList) extends Node(jFXNodesList) {}
   implicit class sfxJFXButtonClass(jFXButton: JFXButton) extends Button(jFXButton) {}
-  implicit class sfxJFXTreeTableColumnClass[S,T](jFXTreeTableColumn: JFXTreeTableColumn[S,T]) extends TreeTableColumn[S,T] { }
-  implicit class sfxJFXTreeTableView[T <: RecursiveTreeObject[T]](jFXTreeTableView: JFXTreeTableView[T]) extends TreeTableView[T] { }
+  implicit class sfxJFXTreeTableColumnClass[S,T](jFXTreeTableColumn: JFXTreeTableColumn[S,T]) extends TreeTableColumn[S,T] {}
+  implicit class sfxJFXTreeTableView[T <: RecursiveTreeObject[T]](jFXTreeTableView: JFXTreeTableView[T]) extends TreeTableView[T] {}
+  implicit class sfxJFXComboBox[T](jFXComboBox: JFXComboBox[T]) extends ComboBox[T] {}
 
   implicit class sfxFontAwesomeIconView(fontAwesomeIcon: FontAwesomeIconView) extends Node(fontAwesomeIcon) {}
   implicit class sfxMaterialIconView(materialIconView: MaterialIconView) extends Node(materialIconView) {}

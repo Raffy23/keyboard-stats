@@ -3,12 +3,13 @@ package keyboardstats.ui
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
-import com.jfoenix.controls.JFXNodesList
+import com.jfoenix.controls.{JFXAutoCompletePopup, JFXComboBox, JFXNodesList}
 import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import javafx.beans.value
 import javafx.beans.value.{ChangeListener, ObservableValue}
+import javafx.fxml.FXML
 import keyboardstats.service.{InputGatherer, KeyboardLayoutService, Statistics}
-import keyboardstats.ui.Defaults.{DEFAULT_KEYBOARD_LAYOUT, DEFAULT_EXPORT_PATH}
+import keyboardstats.ui.Defaults.{DEFAULT_EXPORT_PATH, DEFAULT_KEYBOARD_LAYOUT}
 import keyboardstats.ui.Implicits._
 import keyboardstats.util.i18n._
 import keyboardstats.util.{HeatmapGenerator, SVGUtility}
@@ -28,9 +29,9 @@ import scala.concurrent.Future
   * @author Raphael
   * @version 07.08.2018
   */
-@sfxml class KeyboardController(kbWebView: WebView, lvRecordedApps: ListView[String],
-                                statsToday: Label, statsMonth: Label, statsYear: Label, statsAllTime: Label,
-                                nodeListContainer: Pane,  kbDataTable: TreeTableView[KeyDataProperty]) {
+@sfxml class KeyboardController(kbWebView: WebView, statsToday: Label, statsMonth: Label, statsYear: Label, statsAllTime: Label,
+                                nodeListContainer: Pane,  kbDataTable: TreeTableView[KeyDataProperty],
+                                @FXML cbRecApps: JFXComboBox[String]) {
 
   private val backgroundTasks = new ScheduledThreadPoolExecutor(1)
   private val transformer = new mutable.HashMap[String, HeatmapGenerator]()
@@ -72,9 +73,9 @@ import scala.concurrent.Future
 
 
   // Configure ListView selection Listener
-  lvRecordedApps.items.get().addAll("item.all".localize)
-  lvRecordedApps.getSelectionModel.selectFirst()
-  lvRecordedApps.getSelectionModel.selectedItemProperty().addListener((_, _ ,selectedItem) => {
+  cbRecApps.getItems.add("item.all".localize)
+  cbRecApps.getSelectionModel.selectFirst()
+  cbRecApps.getSelectionModel.selectedItemProperty().addListener((_, _ ,selectedItem) => {
     if (!transformer.contains(selectedItem))
       transformer.put(selectedItem, new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), Statistics.app(selectedItem)))
 
@@ -103,7 +104,7 @@ import scala.concurrent.Future
   def update(keyCode: Int = -1, app: String = "item.all".localize): Unit = Platform.runLater(() => {
     selected.get().transform(kbWebView.engine)
 
-    val selectedEntry = lvRecordedApps.selectionModel.value.getSelectedItems.get(0)
+    val selectedEntry = cbRecApps.getSelectionModel.getSelectedItem
     if (keyCode > -1 && (app == selectedEntry || selectedEntry == "item.all".localize))
       kbModel.get().refresh(keyCode)
 
@@ -116,8 +117,8 @@ import scala.concurrent.Future
   private val appListRefresher = backgroundTasks.scheduleAtFixedRate(() => try {
     Platform.runLater(() => {
       Statistics.getToday.map(_.keys).foreach(_.foreach(app => {
-        if(!lvRecordedApps.items.get().contains(app))
-          lvRecordedApps.items.get().add(app)
+        if(!cbRecApps.getItems.contains(app))
+          cbRecApps.getItems.add(app)
       }))
     })
   } catch { case ex: Exception => ex.printStackTrace() }, 1000, 500, TimeUnit.MILLISECONDS)
