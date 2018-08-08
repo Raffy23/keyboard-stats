@@ -10,6 +10,7 @@ import keyboardstats.service.{InputGatherer, SingleInstanceService, Statistics}
 import keyboardstats.util.{AppConfig, KeyEventListener, UserConfig}
 import keyboardstats.util.i18n.LanguageManager
 import javafx.embed.swing.JFXPanel
+import javax.swing.UIManager
 import scalafx.application.Platform
 import scalafx.scene.control.Alert
 
@@ -65,7 +66,10 @@ object Loader extends App {
     println("alert.systray_not_supported".localize)
     Platform.runLater(() => new Alert(Alert.AlertType.Error, "alert.systray_not_supported".localize).show())
   } else {
+
     new JFXPanel() // boot JavaFX Toolkit
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
+
     Platform.runLater(() => {
 
       val dim = SystemTray.getSystemTray.getTrayIconSize.height
@@ -81,6 +85,7 @@ object Loader extends App {
       })
 
       popup.add(exitItem)
+      trayIcon.setToolTip("Keyboard-Stats")
       trayIcon.setPopupMenu(popup)
       trayIcon.addActionListener((_) => showUI())
 

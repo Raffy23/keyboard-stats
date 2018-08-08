@@ -1,6 +1,6 @@
 .fab {
   -fx-pref-width: 60px;
-  -fx-background-color: #242424;
+  -fx-background-color: #212f5b;
   -fx-background-radius: 60px;
   -fx-pref-height: 60px;
   -fx-min-width: -fx-pref-width;
@@ -13,7 +13,7 @@
 
 .fab-small {
   -fx-pref-width: 42px;
-  -fx-background-color: #242424;
+  -fx-background-color: #212f5b;
   -fx-background-radius: 42px;
   -fx-pref-height: 42px;
   -fx-min-width: -fx-pref-width;
@@ -25,5 +25,5 @@
 }
 
 .fab .jfx-rippler, .fab-small .jfx-rippler{
-  -jfx-rippler-fill: rgba(255,255,255, .87);
+  -jfx-rippler-fill: rgba(255,255,255, .76);
 }

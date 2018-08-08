@@ -42,7 +42,7 @@
          </font>
       </Label>
       <JFXTextField fx:id="textDefaultPath" layoutX="570.0" layoutY="138.0" prefHeight="25.0" prefWidth="201.0" promptText="%prompt.defaultpath" AnchorPane.leftAnchor="570.0" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="138.0" />
-      <JFXButton fx:id="btnSubmitChanges" buttonType="RAISED" defaultButton="true" layoutX="750.0" layoutY="489.0" mnemonicParsing="false" style="-fx-background-color: #89a1ed;" text="%button.submit" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+      <JFXButton fx:id="btnSubmitChanges" buttonType="RAISED" defaultButton="true" layoutX="750.0" layoutY="489.0" mnemonicParsing="false" style="-fx-background-color: #212f5b; -fx-text-fill: #F0F0F0;" text="%button.submit" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
       <Label layoutX="377.0" layoutY="180.0" text="%settings.imagepath" AnchorPane.leftAnchor="377.0" AnchorPane.topAnchor="180.0" />
       <JFXTextField fx:id="textExportPath" layoutX="570.0" layoutY="176.0" prefHeight="25.0" prefWidth="201.0" promptText="%prompt.defaultpath" AnchorPane.leftAnchor="570.0" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="176.0" />
   </children>

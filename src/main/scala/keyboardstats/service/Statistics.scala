@@ -48,7 +48,7 @@ object Statistics {
   def getToday: Option[Record] = getRecord(LocalDate.now())
   def getYesterday: Option[Record] = getRecord(LocalDate.now().minusDays(1))
 
-  def all(localDate: LocalDate = LocalDate.now()): KeyRecords = aggrStats.getOrElseUpdate(localDate, new KeyRecords)
+  def all(localDate: LocalDate = LocalDate.now()): KeyRecords = aggrStats.getOrElseUpdate(localDate, loadAllKeyRecord(localDate)())
   def app(app: String, localDate: LocalDate = LocalDate.now()): KeyRecords =
     statistics.getOrElseUpdate(localDate, new Record).getOrElseUpdate(app, new KeyRecords)
 
@@ -77,11 +77,25 @@ object Statistics {
 
   def loadFromDisk(date: LocalDate)(file: String = DEFAULT_SAVE_FILE(date)): Future[Record] = Future {
     decode[Record](Source.fromFile(file).getLines().mkString).fold(
-      (e) => throw e,
+      (_) => new Record,
       (x) => x
     )
   }
 
+  private def loadAllKeyRecord(date: LocalDate)(file: String = DEFAULT_SAVE_FILE(date)): KeyRecords = try {
+    decode[Record](Source.fromFile(file).getLines().mkString).fold(
+      (_) => new Record,
+      (x) => x
+    ).foreach{ case (app, record) =>
+      record.foreach { case (keyCode, count) =>
+        statistics.getOrElseUpdate(date, new Record).getOrElseUpdate(app, new KeyRecords).updateValue(keyCode, (v) => v + count)
+        aggrStats.getOrElseUpdate(date, new KeyRecords).updateValue(keyCode, (v) => v + count)
+      }
+    }
 
+    aggrStats.getOrElseUpdate(date, new KeyRecords)
+  } catch {
+    case _: Exception => new KeyRecords
+  }
 
 }

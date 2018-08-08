@@ -1,9 +1,10 @@
 package keyboardstats.ui
 
+import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
-import com.jfoenix.controls.{JFXAutoCompletePopup, JFXComboBox, JFXNodesList}
+import com.jfoenix.controls.{JFXComboBox, JFXDatePicker, JFXNodesList}
 import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import javafx.beans.value
 import javafx.beans.value.{ChangeListener, ObservableValue}
@@ -12,14 +13,13 @@ import keyboardstats.service.{InputGatherer, KeyboardLayoutService, Statistics}
 import keyboardstats.ui.Defaults.{DEFAULT_EXPORT_PATH, DEFAULT_KEYBOARD_LAYOUT}
 import keyboardstats.ui.Implicits._
 import keyboardstats.util.i18n._
-import keyboardstats.util.{HeatmapGenerator, SVGUtility}
+import keyboardstats.util.{HeatmapGenerator, KeyEventListener, SVGUtility}
 import scalafx.application.Platform
-import scalafx.scene.control.{Label, ListView, TreeTableView}
+import scalafx.scene.control.TreeTableView
 import scalafx.scene.layout.Pane
 import scalafx.scene.web.{WebEngine, WebView}
 import scalafxml.core.macros.sfxml
 
-import scala.collection.mutable
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -29,15 +29,14 @@ import scala.concurrent.Future
   * @author Raphael
   * @version 07.08.2018
   */
-@sfxml class KeyboardController(kbWebView: WebView, statsToday: Label, statsMonth: Label, statsYear: Label, statsAllTime: Label,
-                                nodeListContainer: Pane,  kbDataTable: TreeTableView[KeyDataProperty],
-                                @FXML cbRecApps: JFXComboBox[String]) {
+@sfxml class KeyboardController(kbWebView: WebView, nodeListContainer: Pane, kbDataTable: TreeTableView[KeyDataProperty],
+                                @FXML cbRecApps: JFXComboBox[String], @FXML dateStart: JFXDatePicker,
+                                @FXML dateEnd: JFXDatePicker) {
+
+  private val SVG_ELEMENT = "svg2"
 
   private val backgroundTasks = new ScheduledThreadPoolExecutor(1)
-  private val transformer = new mutable.HashMap[String, HeatmapGenerator]()
-  transformer.put("item.all".localize, new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), Statistics.all()))
-
-  private val selected = new AtomicReference(transformer("item.all".localize))
+  private val transformer = new AtomicReference(new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), Statistics.all()))
   private val kbModel = new AtomicReference(new KeyboardTableModel(kbDataTable, Statistics.all()))
 
   // Init Node list with FAB Buttons
@@ -47,7 +46,7 @@ import scala.concurrent.Future
   jfxNodeList.getStylesheets.add(stylesheet("fab"))
   jfxNodeList.addAnimatedNode(FAB(MaterialIcon.SAVE, "menu.save_btn".localize))
   jfxNodeList.addAnimatedNode(SmallFAB(MaterialIcon.IMAGE, "tooltip.export_as_png".localize, () => { Future {
-    SVGUtility.saveAs(DEFAULT_EXPORT_PATH, "png", selected.get().transform().head, 776*2, 236*2)}
+    SVGUtility.saveAs(DEFAULT_EXPORT_PATH, "png", transformer.get().transform().head, 776*2, 236*2)}
     Platform.runLater(() => jfxNodeList.animateList(false))
   }))
   jfxNodeList.addAnimatedNode(jfxButton("JSON", "tooltip.save_to_disk".localize, "fab-small", () => { Future {
@@ -56,59 +55,54 @@ import scala.concurrent.Future
   }}))
   nodeListContainer.children.add(jfxNodeList)
 
+  // Setup DatePicker:
+  dateStart.setValue(LocalDate.now())
+  dateEnd.setValue(LocalDate.now())
+
+  //TODO: Validation & onAction listener
+  dateStart.setOnAction((_) => updateDataView())
+  dateEnd.disable = true
+
   // Init WebView
   kbWebView.contextMenuEnabled = false
   kbWebView.engine.userStyleSheetLocation = stylesheet("svgViewer")
   kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(DEFAULT_KEYBOARD_LAYOUT))
-  kbWebView.width.addListener((_,_,size) => tryResize("svg2", "width", size.doubleValue() - 28.0))
-  kbWebView.height.addListener((_,_,size) => tryResize("svg2", "height", size.doubleValue()))
+  kbWebView.width.addListener((_,_,size) => tryResize(SVG_ELEMENT, "width", size.doubleValue() - 28.0))
+  kbWebView.height.addListener((_,_,size) => tryResize(SVG_ELEMENT, "height", size.doubleValue()))
 
   private val layoutChangeListener = new ChangeListener[String] {
     override def changed(observable: ObservableValue[_ <: String], oldValue: String, newValue: String): Unit = {
       kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(newValue))
-      kbWebView.engine.doAfterLoadOnce(() => selected.get().transform(kbWebView.engine))
+      kbWebView.engine.doAfterLoadOnce(() => transformer.get().transform(kbWebView.engine))
     }
   }
   DEFAULT_KEYBOARD_LAYOUT.addListener(layoutChangeListener)
 
-
   // Configure ListView selection Listener
   cbRecApps.getItems.add("item.all".localize)
   cbRecApps.getSelectionModel.selectFirst()
-  cbRecApps.getSelectionModel.selectedItemProperty().addListener((_, _ ,selectedItem) => {
-    if (!transformer.contains(selectedItem))
-      transformer.put(selectedItem, new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), Statistics.app(selectedItem)))
-
-    // Set selected item for async refresh
-    selected.set(transformer(selectedItem))
-    kbModel.set(new KeyboardTableModel(kbDataTable, if(selectedItem == "item.all".localize) Statistics.all() else Statistics.app(selectedItem)))
-
-    // Re-load keymap from svg & render new content
-    Platform.runLater(() => {
-      kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(DEFAULT_KEYBOARD_LAYOUT))
-      kbWebView.engine.doAfterLoadOnce(() => selected.get().transform(kbWebView.engine))
-    })
-  })
+  cbRecApps.getSelectionModel.selectedItemProperty().addListener((_, _ ,selectedItem) => updateDataView(selectedItem))
 
   // Register global listener
-  InputGatherer.listeners.add((_, keyCode, app) => update(keyCode, app))
+  private val keyChangeListener: KeyEventListener = (_, keyCode, app) => update(keyCode, app)
+  InputGatherer.listeners.add(keyChangeListener)
 
   def shutdownBackgroundTasks(): Unit = {
     appListRefresher.cancel(true)
     syncStats.cancel(false)
 
     backgroundTasks.shutdown()
+
     DEFAULT_KEYBOARD_LAYOUT.removeListener(layoutChangeListener)
+    InputGatherer.listeners.remove(keyChangeListener)
   }
 
   def update(keyCode: Int = -1, app: String = "item.all".localize): Unit = Platform.runLater(() => {
-    selected.get().transform(kbWebView.engine)
+    transformer.get().transform(kbWebView.engine)
 
     val selectedEntry = cbRecApps.getSelectionModel.getSelectedItem
     if (keyCode > -1 && (app == selectedEntry || selectedEntry == "item.all".localize))
       kbModel.get().refresh(keyCode)
-
-    statsToday.text = Statistics.getTodayKeys.toString
   })
 
   def updateAfterLoaded(): Unit = Platform.runLater(() => kbWebView.engine.doAfterLoadOnce(() => update()))
@@ -153,5 +147,27 @@ import scala.concurrent.Future
       return
 
     elem.setAttribute(attr, value.toInt.toString + "px")
+  }
+
+  private def updateDataView(selectedItem: String = cbRecApps.getSelectionModel.getSelectedItem): Unit = {
+    val data = if(selectedItem == "item.all".localize) Statistics.all(dateStart.getValue)
+    else                                    Statistics.app(selectedItem, dateStart.getValue)
+
+    // Set selected item for async refresh
+    transformer.set(new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), data))
+    kbModel.set(new KeyboardTableModel(kbDataTable,data))
+
+    // Re-load keymap from svg & render new content
+    Platform.runLater(() => {
+      val width = kbWebView.engine.document.getElementById(SVG_ELEMENT).getAttribute("width")
+      val height = kbWebView.engine.document.getElementById(SVG_ELEMENT).getAttribute("height")
+
+      kbWebView.engine.loadContent(KeyboardLayoutService.layoutToString(DEFAULT_KEYBOARD_LAYOUT))
+      kbWebView.engine.doAfterLoadOnce(() => {
+        kbWebView.engine.document.getElementById(SVG_ELEMENT).setAttribute("width", width)
+        kbWebView.engine.document.getElementById(SVG_ELEMENT).setAttribute("height", height)
+        transformer.get().transform(kbWebView.engine)
+      })
+    })
   }
 }

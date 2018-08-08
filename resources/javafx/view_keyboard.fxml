@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
 <?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -10,7 +12,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
@@ -22,40 +23,14 @@
     </controller>
   </properties>
 
-
   <children>
-    <HBox layoutX="14.0" layoutY="42.0" prefHeight="100.0" prefWidth="416.0" style="-fx-background-color: #FFF;" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="413.0" AnchorPane.topAnchor="55.0">
-      <children>
-        <VBox prefHeight="100.0" prefWidth="296.0" spacing="4.0">
-          <children>
-            <Label text="%subheader.statistics">
-              <font>
-                <Font name="System Bold" size="12.0" />
-              </font>
-            </Label>
-            <AnchorPane prefHeight="79.0" prefWidth="119.0">
-              <children>
-                <Label layoutX="14.0" layoutY="6.0" text="%stats.today" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="4.0" />
-                <Label layoutY="15.0" text="%stats.month" visible="false" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="20.0" />
-                <Label layoutX="-7.0" layoutY="31.0" text="%stats.year" visible="false" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="36.0" />
-                <Label layoutY="48.0" text="%stats.4ever" visible="false" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="52.0" />
-                <Label fx:id="statsToday" layoutX="99.0" layoutY="4.0" text="0" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="4.0" />
-                <Label fx:id="statsMonth" layoutX="99.0" layoutY="20.0" text="0" visible="false" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="20.0" />
-                <Label fx:id="statsYear" layoutX="99.0" layoutY="36.0" text="0" visible="false" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="36.0" />
-                <Label fx:id="statsAllTime" layoutX="99.0" layoutY="52.0" text="0" visible="false" AnchorPane.leftAnchor="99.0" AnchorPane.topAnchor="52.0" />
-              </children>
-            </AnchorPane>
-          </children>
-        </VBox>
-      </children>
-    </HBox>
     <Label layoutX="14.0" layoutY="23.0" text="%header.keyboard" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
       <font>
         <Font size="24.0" />
       </font>
     </Label>
-    <Separator layoutX="14.0" layoutY="39.0" prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
-    <JFXTabPane layoutX="14.0" layoutY="105.0" prefHeight="429.0" prefWidth="741.0" side="BOTTOM" stylesheets="@style/sub_tabpane.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="171.0">
+    <Separator layoutX="14.0" layoutY="39.0" prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="50.0" />
+    <JFXTabPane layoutX="14.0" layoutY="105.0" prefHeight="429.0" prefWidth="741.0" side="BOTTOM" stylesheets="@style/sub_tabpane.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="181.0">
       <tabs>
         <Tab closable="false" text="%tab.kbheatmap">
           <content>
@@ -82,11 +57,38 @@
         <Pane fx:id="nodeListContainer" prefHeight="58.0" prefWidth="58.0" />
       </children>
     </StackPane>
-<Label layoutX="546.0" layoutY="55.0" text="%subheader.recApps" AnchorPane.rightAnchor="178.0" AnchorPane.topAnchor="55.0">
-  <font>
-    <Font name="System Bold" size="12.0" />
-  </font>
-</Label>
-      <JFXComboBox fx:id="cbRecApps" layoutX="679.0" layoutY="51.0" prefWidth="150.0" promptText="%item.all" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="51.0" />
+      <JFXToggleButton layoutX="694.0" layoutY="3.0" mnemonicParsing="false" text="%header.toggletext" toggleColor="#212f5b"
+        toggleLineColor="#4469cd" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0" />
+      <HBox alignment="CENTER_LEFT" layoutX="120.0" layoutY="60.0" spacing="8.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="60.0">
+         <children>
+            <Label text="%date_from">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <JFXDatePicker defaultColor="#212f5b" showWeekNumbers="true" fx:id="dateStart" />
+            <Label text="%date_to">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <JFXDatePicker defaultColor="#212f5b" showWeekNumbers="true" fx:id="dateEnd" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="21.0" layoutY="118.0" spacing="8.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="60.0">
+         <children>
+      <Label text="%subheader.recApps">
+        <font>
+          <Font name="System Bold" size="12.0" />
+        </font>
+      </Label>
+            <JFXComboBox fx:id="cbRecApps" prefWidth="150.0" promptText="%item.all" />
+         </children>
+      </HBox>
+      <Pane layoutX="14.0" layoutY="48.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="100.0">
+         <children>
+            <fx:include source="component/keyboard_statistics.fxml" />
+         </children>
+      </Pane>
   </children>
 </AnchorPane>

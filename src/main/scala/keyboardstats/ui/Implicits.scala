@@ -35,6 +35,9 @@ object Implicits {
   implicit class sfxJFXTreeTableView[T <: RecursiveTreeObject[T]](jFXTreeTableView: JFXTreeTableView[T]) extends TreeTableView[T] {}
   implicit class sfxJFXComboBox[T](jFXComboBox: JFXComboBox[T]) extends ComboBox[T] {}
 
+  // Doesn't work as indented
+  implicit class sfxJFXDatePicker(jfxDatePicker: JFXDatePicker) extends Node(jfxDatePicker) {}
+
   implicit class sfxFontAwesomeIconView(fontAwesomeIcon: FontAwesomeIconView) extends Node(fontAwesomeIcon) {}
   implicit class sfxMaterialIconView(materialIconView: MaterialIconView) extends Node(materialIconView) {}
 
