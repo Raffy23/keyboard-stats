@@ -60,6 +60,7 @@ import scala.concurrent.Future
   dateEnd.setValue(LocalDate.now())
 
   //TODO: Validation & onAction listener
+  //TODO: Update application combobox
   dateStart.setOnAction((_) => updateDataView())
   dateEnd.disable = true
 
@@ -151,7 +152,7 @@ import scala.concurrent.Future
 
   private def updateDataView(selectedItem: String = cbRecApps.getSelectionModel.getSelectedItem): Unit = {
     val data = if(selectedItem == "item.all".localize) Statistics.all(dateStart.getValue)
-    else                                    Statistics.app(selectedItem, dateStart.getValue)
+    else                                               Statistics.app(selectedItem, dateStart.getValue)
 
     // Set selected item for async refresh
     transformer.set(new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), data))

@@ -53,7 +53,8 @@ import scalafxml.core.macros.sfxml
     diagContent.setActions(
       buttons.map { case (name, action) =>
         val btn = new JFXButton(name)
-        btn.setButtonType(JFXButton.ButtonType.RAISED)
+        btn.setButtonType(JFXButton.ButtonType.FLAT)
+        btn.setStyle("-fx-background-color: #d5d5d5")
         btn.setOnAction((_) => if (action()) dialog.close())
 
         btn

@@ -26,7 +26,7 @@
     <Separator prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
     <JFXListView fx:id="lvIgnoreApps" layoutX="14.0" layoutY="88.0" prefHeight="461.0" prefWidth="240.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="88.0" />
     <JFXTextField fx:id="textIgnoreApp" layoutX="296.0" layoutY="300.0" promptText="%prompt.ignoreapp" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-    <JFXButton fx:id="btnIgnoreApp" buttonType="RAISED" layoutX="171.0" layoutY="561.0" mnemonicParsing="false" prefWidth="85.0" text="%button.add" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="171.0" />
+    <JFXButton fx:id="btnIgnoreApp" buttonType="FLAT" layoutX="171.0" layoutY="561.0" mnemonicParsing="false" prefWidth="85.0" text="%button.add" style="-fx-background-color: #d5d5d5" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="171.0" />
     <Label layoutX="29.0" layoutY="79.0" text="%subheader.ignoreapps" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="65.0">
       <font>
         <Font name="System Bold" size="12.0" />
