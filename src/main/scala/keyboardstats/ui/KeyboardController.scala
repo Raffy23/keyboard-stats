@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.{ScheduledThreadPoolExecutor, TimeUnit}
 
-import com.jfoenix.controls.{JFXComboBox, JFXDatePicker, JFXNodesList}
+import com.jfoenix.controls._
 import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import javafx.beans.value
 import javafx.beans.value.{ChangeListener, ObservableValue}
@@ -25,6 +25,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Try
 import Statistics.KeyRecordCompacter
+import com.jfoenix.controls.JFXSnackbar.SnackbarEvent
+import scalafx.scene.Node
 
 /**
   * Created by: 
@@ -34,7 +36,7 @@ import Statistics.KeyRecordCompacter
   */
 @sfxml class KeyboardController(kbWebView: WebView, nodeListContainer: Pane, kbDataTable: TreeTableView[KeyDataProperty],
                                 @FXML cbRecApps: JFXComboBox[String], @FXML dateStart: JFXDatePicker,
-                                @FXML dateEnd: JFXDatePicker, statistics: AnchorPane) {
+                                @FXML dateEnd: JFXDatePicker, statistics: AnchorPane, @FXML toggleKeyboard: JFXToggleButton) {
 
   private val SVG_ELEMENT = "svg2"
 
@@ -43,6 +45,9 @@ import Statistics.KeyRecordCompacter
   private val kbModel = new AtomicReference(new KeyboardTableModel(kbDataTable, Statistics.all()))
 
   private val statisticController: StatisticsController = statistics.getController
+
+  private var toaster: (SnackbarEvent) => Unit = _
+  def setToaster(t: (SnackbarEvent) => Unit): Unit = toaster = t
 
   // Init Node list with FAB Buttons
   private val jfxNodeList = new JFXNodesList()
@@ -102,6 +107,15 @@ import Statistics.KeyRecordCompacter
   private val keyChangeListener: KeyEventListener = (_, keyCode, app) => update(keyCode, app)
   InputGatherer.listeners.add(keyChangeListener)
 
+
+  //Toggle Button to enable / disable recording
+  toggleKeyboard.setSelected(true)
+  toggleKeyboard.setOnAction((_) => {
+    InputGatherer.enabled.set(toggleKeyboard.isSelected)
+
+    toaster(new SnackbarEvent(s"snackbar.${if (toggleKeyboard.isSelected) "enabled" else "disabled" }_recording".localize))
+  })
+
   def shutdownBackgroundTasks(): Unit = {
     appListRefresher.cancel(true)
     syncStats.cancel(false)
@@ -112,6 +126,12 @@ import Statistics.KeyRecordCompacter
     InputGatherer.listeners.remove(keyChangeListener)
 
     statisticController.shutdown()
+  }
+
+  def onTabShow(): Unit = {
+    if (!InputGatherer.enabled.get()) {
+      toaster(new SnackbarEvent("snackbar.disabled_recording".localize))
+    }
   }
 
   def update(keyCode: Int = -1, app: String = "item.all".localize): Unit = Platform.runLater(() => {

@@ -58,7 +58,7 @@
       </children>
     </StackPane>
       <JFXToggleButton layoutX="694.0" layoutY="3.0" mnemonicParsing="false" text="%header.toggletext" toggleColor="#212f5b"
-        toggleLineColor="#4469cd" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0" />
+        toggleLineColor="#4469cd" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="0.0" fx:id="toggleKeyboard"/>
       <HBox alignment="CENTER_LEFT" layoutX="120.0" layoutY="60.0" spacing="8.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="60.0">
          <children>
             <Label text="%date_from">

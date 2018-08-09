@@ -1,6 +1,6 @@
 package keyboardstats.ui
 
-import com.jfoenix.controls.{JFXButton, JFXDialog, JFXDialogLayout}
+import com.jfoenix.controls.{JFXButton, JFXDialog, JFXDialogLayout, JFXSnackbar}
 import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import javafx.scene.text.{Font, Text}
 import keyboardstats.ui.Defaults._
@@ -29,10 +29,14 @@ import scalafxml.core.macros.sfxml
   private lazy val keyboardController: KeyboardController = tabKeyboard.content.value.getController
   private lazy val settingsController: SettingsController = tabSettings.content.value.getController
 
+  private lazy val snackbar = new JFXSnackbar(dialogStackPane)
+
   // So we have to play proxy in this controller for all sub-controllers!
   def updateAfterLoaded(): Unit = keyboardController.updateAfterLoaded()
   def shutdownBackgroundTasks(): Unit = keyboardController.shutdownBackgroundTasks()
 
+  keyboardController.setToaster((event) => snackbar.enqueue(event))
+  tabKeyboard.onSelectionChanged = (_) => if (tabKeyboard.isSelected) keyboardController.onTabShow()
 
 
   private def initTab(tab: Tab, icon: MaterialIcon, tooltip: String): Unit = {
