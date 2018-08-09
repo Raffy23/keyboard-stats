@@ -1,0 +1,5 @@
+.root {
+  -fx-accent: #212f5b;
+  -fx-focus-color: #212f5b;
+  -fx-cell-hover-color: #212f5b;
+}
