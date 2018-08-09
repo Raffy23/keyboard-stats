@@ -62,6 +62,9 @@ object Loader extends App {
     Statistics.logKeyPress(LocalDate.now(), app, keyCode)
   )
 
+
+  private var sysTray: Option[TrayIcon] = None
+
   if (!SystemTray.isSupported) {
     println("alert.systray_not_supported".localize)
     Platform.runLater(() => new Alert(Alert.AlertType.Error, "alert.systray_not_supported".localize).show())
@@ -71,7 +74,6 @@ object Loader extends App {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
 
     Platform.runLater(() => {
-
       val dim = SystemTray.getSystemTray.getTrayIconSize.height
 
       val popup = new PopupMenu()
@@ -90,6 +92,7 @@ object Loader extends App {
       trayIcon.addActionListener((_) => showUI())
 
       SystemTray.getSystemTray.add(trayIcon)
+      sysTray = Some(trayIcon)
     })
   }
 
@@ -100,21 +103,16 @@ object Loader extends App {
   }
 
   def destroy(): Unit = {
+    sysTray.foreach(SystemTray.getSystemTray.remove)
+
     instanceMutex.destroy()
     InputGatherer.globalKeyListener.destroy()
 
-    Statistics.syncToDisk()()
-
-    import io.circe.syntax._
-    import scala.collection.JavaConverters._
-
-    val writer = new PrintWriter(new File(EXCLUDED_APPS_FILE))
-    writer.print(InputGatherer.excludedApps.asScala.asJson.noSpaces)
-    writer.flush()
-    writer.close()
+    Statistics.blockingSyncToDisk()()
+    saveExcludedApps()
 
     Platform.exit()
-    System.exit(0) // AWT Event Queue still running, how kill?
+
   }
 
   private def showUI(): Unit =
@@ -125,6 +123,16 @@ object Loader extends App {
       Future { MainJFXWindow.main(args) }
     }
 
+
+  private def saveExcludedApps(): Unit = {
+    import io.circe.syntax._
+    import scala.collection.JavaConverters._
+
+    val writer = new PrintWriter(new File(EXCLUDED_APPS_FILE))
+    writer.print(InputGatherer.excludedApps.asScala.asJson.noSpaces)
+    writer.flush()
+    writer.close()
+  }
 
 
   private def mkdirIfAbsent(path: String): Unit = {

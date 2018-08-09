@@ -116,7 +116,10 @@ object Implicits {
 
   implicit def stylesheet(name: String): String = getClass.getResource("/javafx/style/"+name+".css").toExternalForm
 
-  implicit class RichControllerNode(node: javafx.scene.Node) {
+  implicit class RichJavaControllerNode(node: javafx.scene.Node) {
+    def getController[T]: T = node.getProperties.get("controller").asInstanceOf[T]
+  }
+  implicit class RichScalaFXControllerNode(node: Node) {
     def getController[T]: T = node.getProperties.get("controller").asInstanceOf[T]
   }
 

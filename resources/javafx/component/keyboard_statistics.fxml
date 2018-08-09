@@ -8,7 +8,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="keyboardstats.ui.component.StatisticsController">
+
+  <properties>
+    <controller>
+      <fx:reference source="controller" />
+    </controller>
+  </properties>
 
   <Label layoutX="12.0" layoutY="97.0" text="%subheader.statistics" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
     <font>
@@ -32,14 +38,14 @@
     <children>
       <Label text="%stats.today" />
       <Label text="%stats.yesterday" GridPane.rowIndex="1" />
-      <Label text="0" GridPane.columnIndex="1" />
-      <Label text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label fx:id="today" text="0" GridPane.columnIndex="1" />
+      <Label fx:id="yesterday" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Label text="%stats.month" GridPane.columnIndex="2" />
       <Label text="%stats.year" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <Label text="0" GridPane.columnIndex="3" />
-      <Label text="0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <Label fx:id="month" text="0" GridPane.columnIndex="3" />
+      <Label fx:id="year" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
       <Label text="%stats.selected" GridPane.columnIndex="4" />
-      <Label text="0" GridPane.columnIndex="5" />
+      <Label fx:id="selected" text="0" GridPane.columnIndex="5" />
     </children>
       <padding>
          <Insets bottom="15.0" />

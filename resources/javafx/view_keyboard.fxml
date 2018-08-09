@@ -87,7 +87,7 @@
       </HBox>
       <Pane layoutX="14.0" layoutY="48.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="100.0">
          <children>
-            <fx:include source="component/keyboard_statistics.fxml" />
+            <fx:include source="component/keyboard_statistics.fxml" fx:id="statistics" />
          </children>
       </Pane>
   </children>
