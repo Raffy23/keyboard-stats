@@ -13,8 +13,10 @@ import scalafx.scene.control._
 import javafx.scene.image.{Image => jfxImage}
 import javafx.scene.{Scene => jfxScene}
 import scalafx.beans.property.StringProperty
+import scalafx.event.ActionEvent
 import scalafx.scene.image.Image
 import scalafx.scene.paint.Color
+import scalafx.stage.Window
 import scalafx.util.Duration
 
 import scala.language.implicitConversions
@@ -34,6 +36,7 @@ object Implicits {
   implicit class sfxJFXTreeTableColumnClass[S,T](jFXTreeTableColumn: JFXTreeTableColumn[S,T]) extends TreeTableColumn[S,T] {}
   implicit class sfxJFXTreeTableView[T <: RecursiveTreeObject[T]](jFXTreeTableView: JFXTreeTableView[T]) extends TreeTableView[T] {}
   implicit class sfxJFXComboBox[T](jFXComboBox: JFXComboBox[T]) extends ComboBox[T] {}
+  implicit class sfxJFXTextField(jFXTextField: JFXTextField) extends TextField {}
 
   // Doesn't work as indented
   implicit class sfxJFXDatePicker(jfxDatePicker: JFXDatePicker) extends Node(jfxDatePicker) {}
@@ -123,6 +126,18 @@ object Implicits {
     def getController[T]: T = node.getProperties.get("controller").asInstanceOf[T]
   }
 
+  implicit class RichActionEvent(event: ActionEvent) {
+    import javafx.stage.{Window => jfxWindow}
+    import javafx.scene.{Node => jfxNode}
+
+    private class WindowInstance(jfxWindow: jfxWindow) extends Window(jfxWindow) { }
+    private implicit def convertJfxWindowToSfxWindow(window: jfxWindow): Window = new WindowInstance(window)
+
+    def getStage: Window = event.source.asInstanceOf[jfxNode].getScene.getWindow
+  }
+
   implicit def stringPropertyToString(property: StringProperty): String = property.value
+
+  implicit def jfxEventConverter(event: javafx.event.ActionEvent): ActionEvent = new ActionEvent(event)
 
 }

@@ -1,5 +1,7 @@
 package keyboardstats.ui
 
+import java.io.File
+
 import com.jfoenix.controls.{JFXButton, JFXComboBox, JFXTextField}
 import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import javafx.fxml.FXML
@@ -11,10 +13,14 @@ import scalafx.beans.property.ReadOnlyBooleanProperty
 import scalafx.geometry.Pos
 import scalafx.scene.control.{Label, ListCell, ListView, TextField}
 import scalafx.scene.layout.{HBox, Pane, Priority}
+import scalafx.stage.DirectoryChooser
 import scalafxml.core.macros.sfxml
 
 import scala.collection.JavaConverters._
 import scala.language.implicitConversions
+import keyboardstats.util.i18n._
+import Defaults._
+import scalafx.event.ActionEvent
 
 /**
   * Created by: 
@@ -24,17 +30,18 @@ import scala.language.implicitConversions
   */
 @sfxml class SettingsController(lvIgnoreApps: ListView[String], textIgnoreApp: TextField, @FXML btnIgnoreApp: JFXButton,
                                 @FXML cbKeyboardLayout: JFXComboBox[String], @FXML btnSubmitChanges: JFXButton,
-                                @FXML textExportPath: JFXTextField, @FXML textDefaultPath: JFXTextField) {
+                                @FXML textExportPath: JFXTextField, @FXML textDefaultPath: JFXTextField,
+                                @FXML btnStatsPath: JFXButton, @FXML btnImagePath: JFXButton) {
 
   lvIgnoreApps.items.get().addAll(InputGatherer.excludedApps)
   lvIgnoreApps.cellFactory = (param) => new ApplicationListCell(param.focused)
 
-  textDefaultPath.textProperty().bindBidirectional(Defaults.DEFAULT_STATISTICS_PATH)
-  textExportPath.textProperty().bindBidirectional(Defaults.DEFAULT_EXPORT_PATH)
+  textDefaultPath.textProperty().bindBidirectional(DEFAULT_STATISTICS_PATH)
+  textExportPath.textProperty().bindBidirectional(DEFAULT_EXPORT_PATH)
 
   cbKeyboardLayout.getItems.addAll(KeyboardLayoutService.layouts.keys.asJavaCollection)
   cbKeyboardLayout.getSelectionModel.select(Defaults.DEFAULT_KEYBOARD_LAYOUT.value)
-  cbKeyboardLayout.getSelectionModel.selectedItemProperty().addListener((_,_,newValue) => Defaults.DEFAULT_KEYBOARD_LAYOUT.value = newValue)
+  cbKeyboardLayout.getSelectionModel.selectedItemProperty().addListener((_,_,newValue) => DEFAULT_KEYBOARD_LAYOUT.value = newValue)
 
   btnIgnoreApp.onAction = (_) => {
     if (textIgnoreApp.text.value.nonEmpty) {
@@ -50,6 +57,25 @@ import scala.language.implicitConversions
     UserConfig.saveExcludedApps()
   }
 
+
+  private val dirChooser = new DirectoryChooser()
+  private def selectedDirectory(initialDir: String)(implicit event: ActionEvent): String = {
+    dirChooser.title = "title.select_directory".localize
+    dirChooser.initialDirectory =
+      if (new File(initialDir).getAbsoluteFile.exists()) new File(initialDir)
+      else                                               new File(System.getProperty("user.home"))
+
+    dirChooser.showDialog(event.getStage) match {
+      case null => initialDir
+      case file: File => file.getAbsolutePath
+    }
+  }
+
+  btnStatsPath.graphic  = MaterialIcon.FOLDER_OPEN.toIcon(20)
+  btnStatsPath.onAction = (event) => DEFAULT_STATISTICS_PATH.value = selectedDirectory(DEFAULT_STATISTICS_PATH)(event)
+
+  btnImagePath.graphic  = MaterialIcon.FOLDER_OPEN.toIcon(20)
+  btnImagePath.onAction = (event) => DEFAULT_EXPORT_PATH.value = selectedDirectory(DEFAULT_EXPORT_PATH)(event)
 
 
   private implicit def convertJFXListCellToSFXListCell[T](jfx: jfxListCell[T]): ListCell[T] = new ListCell[T](jfx)

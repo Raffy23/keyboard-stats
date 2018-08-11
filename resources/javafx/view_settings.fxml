@@ -10,12 +10,12 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="528.0" prefWidth="849.0" style="-fx-background-color: #FFF;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="keyboardstats.ui.SettingsController">
+
   <properties>
     <controller>
       <fx:reference source="controller" />
     </controller>
   </properties>
-
   
   <children>
     <Label text="%header.settings" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
@@ -26,7 +26,7 @@
     <Separator prefWidth="200.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="48.0" />
     <JFXListView fx:id="lvIgnoreApps" layoutX="14.0" layoutY="88.0" prefHeight="461.0" prefWidth="240.0" AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="88.0" />
     <JFXTextField fx:id="textIgnoreApp" layoutX="296.0" layoutY="300.0" promptText="%prompt.ignoreapp" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-    <JFXButton fx:id="btnIgnoreApp" buttonType="FLAT" layoutX="171.0" layoutY="561.0" mnemonicParsing="false" prefWidth="85.0" text="%button.add" style="-fx-background-color: #d5d5d5" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="171.0" />
+    <JFXButton fx:id="btnIgnoreApp" buttonType="FLAT" layoutX="171.0" layoutY="561.0" mnemonicParsing="false" prefWidth="85.0" style="-fx-background-color: #d5d5d5" text="%button.add" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="171.0" />
     <Label layoutX="29.0" layoutY="79.0" text="%subheader.ignoreapps" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="65.0">
       <font>
         <Font name="System Bold" size="12.0" />
@@ -34,7 +34,7 @@
     </Label>
       <Separator layoutX="302.0" layoutY="65.0" orientation="VERTICAL" prefHeight="464.0" prefWidth="5.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="302.0" AnchorPane.topAnchor="65.0" />
       <Label layoutX="377.0" layoutY="104.0" text="%settings.keyboardlayout" AnchorPane.leftAnchor="377.0" AnchorPane.topAnchor="104.0" />
-      <JFXComboBox fx:id="cbKeyboardLayout" layoutX="571.0" layoutY="100.0" prefHeight="25.0" prefWidth="199.0" promptText="%prompt.keyboardlayout" AnchorPane.leftAnchor="571.0" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="100.0" />
+      <JFXComboBox fx:id="cbKeyboardLayout" layoutX="571.0" layoutY="100.0" prefHeight="25.0" prefWidth="199.0" promptText="%prompt.keyboardlayout" AnchorPane.leftAnchor="571.0" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="100.0" />
       <Label layoutX="377.0" layoutY="142.0" text="%settings.statspath" AnchorPane.leftAnchor="377.0" AnchorPane.topAnchor="142.0" />
       <Label layoutX="333.0" layoutY="65.0" text="%subheader.additionalsettings" AnchorPane.leftAnchor="333.0" AnchorPane.topAnchor="65.0">
          <font>
@@ -45,5 +45,7 @@
       <JFXButton fx:id="btnSubmitChanges" buttonType="RAISED" defaultButton="true" layoutX="750.0" layoutY="489.0" mnemonicParsing="false" style="-fx-background-color: #212f5b; -fx-text-fill: #F0F0F0;" text="%button.submit" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
       <Label layoutX="377.0" layoutY="180.0" text="%settings.imagepath" AnchorPane.leftAnchor="377.0" AnchorPane.topAnchor="180.0" />
       <JFXTextField fx:id="textExportPath" layoutX="570.0" layoutY="176.0" prefHeight="25.0" prefWidth="201.0" promptText="%prompt.defaultpath" AnchorPane.leftAnchor="570.0" AnchorPane.rightAnchor="78.0" AnchorPane.topAnchor="176.0" />
+      <JFXButton fx:id="btnStatsPath" mnemonicParsing="false" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="138.0" />
+      <JFXButton fx:id="btnImagePath" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="176.0" />
   </children>
 </AnchorPane>
