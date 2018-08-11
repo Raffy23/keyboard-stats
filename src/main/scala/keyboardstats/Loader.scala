@@ -109,10 +109,10 @@ object Loader extends App {
     InputGatherer.globalKeyListener.destroy()
 
     Statistics.blockingSyncToDisk()()
-    saveExcludedApps()
+    UserConfig.save()
+    UserConfig.saveExcludedApps()
 
     Platform.exit()
-
   }
 
   private def showUI(): Unit =
@@ -122,17 +122,6 @@ object Loader extends App {
       uiPresent = true
       Future { MainJFXWindow.main(args) }
     }
-
-
-  private def saveExcludedApps(): Unit = {
-    import io.circe.syntax._
-    import scala.collection.JavaConverters._
-
-    val writer = new PrintWriter(new File(EXCLUDED_APPS_FILE))
-    writer.print(InputGatherer.excludedApps.asScala.asJson.noSpaces)
-    writer.flush()
-    writer.close()
-  }
 
 
   private def mkdirIfAbsent(path: String): Unit = {

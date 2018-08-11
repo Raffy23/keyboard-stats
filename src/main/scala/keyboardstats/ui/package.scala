@@ -9,6 +9,7 @@ import scalafx.beans.property.ObjectProperty
 import scalafx.scene.control.Tooltip
 
 import scala.collection.concurrent.TrieMap
+import scala.util.Try
 
 /**
   * Created by: 
@@ -22,7 +23,7 @@ package object ui {
     val keyCode = ObjectProperty(keyCodeValue)
     val count = ObjectProperty(backend(keyCodeValue))
 
-    def refresh(): Unit = count.value = backend(keyCodeValue)
+    def refresh(): Unit = Try(count.value = backend(keyCodeValue)).recover{ case ex: Exception => System.err.println(s"KeyCode: $keyCodeValue => ${ex.getMessage}")}
   }
 
   def FAB(icon: MaterialIcon, tooltip: Tooltip, iconSize: Int = 38): JFXButton = {

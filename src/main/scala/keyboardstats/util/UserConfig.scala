@@ -6,6 +6,7 @@ import keyboardstats.ui.Defaults
 
 import scala.io.Source
 import Defaults._
+import keyboardstats.service.InputGatherer
 
 /**
   * Created by: 
@@ -43,5 +44,14 @@ object UserConfig {
     writer.close()
   }
 
+  def saveExcludedApps(): Unit = {
+    import io.circe.syntax._
+    import scala.collection.JavaConverters._
+
+    val writer = new PrintWriter(new File(EXCLUDED_APPS_FILE))
+    writer.print(InputGatherer.excludedApps.asScala.asJson.noSpaces)
+    writer.flush()
+    writer.close()
+  }
 
 }
