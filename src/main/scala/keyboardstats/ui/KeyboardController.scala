@@ -72,7 +72,7 @@ import scalafx.scene.Node
   //TODO: Validation handler instead of toaster!
   dateStart.setOnAction((_) => {
     if (dateStart.getValue.isAfter(dateEnd.getValue)) {
-      dateStart.setValue(dateEnd.getValue)
+      dateEnd.setValue(dateStart.getValue)
       toaster(new SnackbarEvent("error.start_date_before_end_date", null, 1500, false, null))
     }
 
@@ -80,7 +80,7 @@ import scalafx.scene.Node
   })
   dateEnd.setOnAction((_) => {
     if (dateEnd.getValue.isBefore(dateStart.getValue)) {
-      dateEnd.setValue(dateStart.getValue)
+      dateStart.setValue(dateEnd.getValue)
       toaster(new SnackbarEvent("error.end_date_after_start_date", null, 1500, false, null))
     }
 
