@@ -1,5 +1,6 @@
 package keyboardstats.util
 
+import scalafx.application.Platform
 import scalafx.scene.paint.Color
 import scalafx.scene.web.WebEngine
 
@@ -32,9 +33,18 @@ class HeatmapGenerator(keymap: Seq[Node], keys: TrieMap[Int, Long], startColor: 
     def toRGB: String = s"rgb(${color.red.toIntColor},${color.green.toIntColor},${color.blue.toIntColor})"
   }
 
+  def update(key: Int): Unit = keys.put(key, keys.getOrElse(key, 0L) + 1L)
+
   def transform(): Seq[Node] = new RuleTransformer(xmlColoringRule(max)).transform(keymap)
 
   def transform(engine: WebEngine): Unit = {
+    if (engine.document == null) {
+      System.err.println("Error: document is null, push event again into event queue!")
+      Platform.runLater(() => transform(engine))
+
+      return
+    }
+
     keys.foreach { case (keyCode, count) =>
       val elem = engine.document.getElementById(s"0x${keyCode.toHexString.toUpperCase}")
 

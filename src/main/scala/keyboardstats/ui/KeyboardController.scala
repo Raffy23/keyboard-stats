@@ -69,14 +69,22 @@ import scalafx.scene.Node
   dateStart.setValue(LocalDate.now())
   dateEnd.setValue(LocalDate.now())
 
-  //TODO: Validation
+  //TODO: Validation handler instead of toaster!
   dateStart.setOnAction((_) => {
-    if (dateStart.getValue.isBefore(dateEnd.getValue.minusDays(1))) updateDataView(updateApps = true)
-    else dateStart.setValue(dateEnd.getValue)
+    if (dateStart.getValue.isAfter(dateEnd.getValue)) {
+      dateStart.setValue(dateEnd.getValue)
+      toaster(new SnackbarEvent("error.start_date_before_end_date", null, 1500, false, null))
+    }
+
+    updateDataView(updateApps = true)
   })
   dateEnd.setOnAction((_) => {
-    if (dateEnd.getValue.isAfter(dateStart.getValue.plusDays(1))) updateDataView(updateApps = true)
-    else dateEnd.setValue(dateStart.getValue)
+    if (dateEnd.getValue.isBefore(dateStart.getValue)) {
+      dateEnd.setValue(dateStart.getValue)
+      toaster(new SnackbarEvent("error.end_date_after_start_date", null, 1500, false, null))
+    }
+
+    updateDataView(updateApps = true)
   })
 
   statisticController.setSelected(LocalDate.now(), LocalDate.now())
@@ -135,11 +143,12 @@ import scalafx.scene.Node
   }
 
   def update(keyCode: Int = -1, app: String = "item.all".localize): Unit = Platform.runLater(() => {
-    transformer.get().transform(kbWebView.engine)
-
-    val selectedEntry = cbRecApps.getSelectionModel.getSelectedItem
-    if (keyCode > -1 && (app == selectedEntry || selectedEntry == "item.all".localize))
+    if (keyCode > -1) {
+      transformer.get().update(keyCode)
       kbModel.get().refresh(keyCode)
+    }
+
+    transformer.get().transform(kbWebView.engine)
   })
 
   def updateAfterLoaded(): Unit = Platform.runLater(() => kbWebView.engine.doAfterLoadOnce(() => update()))
@@ -217,7 +226,7 @@ import scalafx.scene.Node
 
     // Set selected item for async refresh
     transformer.set(new HeatmapGenerator(KeyboardLayoutService.layouts(DEFAULT_KEYBOARD_LAYOUT), data))
-    kbModel.set(new KeyboardTableModel(kbDataTable,data))
+    kbModel.set(new KeyboardTableModel(kbDataTable, data))
 
     // Re-load keymap from svg & render new content
     Platform.runLater(() => {

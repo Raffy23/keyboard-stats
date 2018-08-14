@@ -21,9 +21,10 @@ package object ui {
 
   class KeyDataProperty(keyCodeValue: Int, backend: TrieMap[Int, Long]) extends RecursiveTreeObject[KeyDataProperty] {
     val keyCode = ObjectProperty(keyCodeValue)
-    val count = ObjectProperty(backend(keyCodeValue))
+    val count = ObjectProperty(backend.getOrElseUpdate(keyCodeValue, 0))
 
-    def refresh(): Unit = Try(count.value = backend(keyCodeValue)).recover{ case ex: Exception => System.err.println(s"KeyCode: $keyCodeValue => ${ex.getMessage}")}
+    // backend can not be reactive anymore if multiple records are selected form statistics ...
+    def refresh(): Unit = count.value += 1
   }
 
   def FAB(icon: MaterialIcon, tooltip: Tooltip, iconSize: Int = 38): JFXButton = {
@@ -62,5 +63,7 @@ package object ui {
 
     button
   }
+
+
 
 }
