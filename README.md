@@ -3,9 +3,9 @@ Keyboard Statistics
 Small open source utility program to record keyboard usage in multiple applications and display them as a heatmap.
 
 ## Features
-* Record key presses with direct input api in windows
+* Record key events with raw device input api on windows
 * Display keyboard heatmap in customizable layout (SVG format)
-* Export Heatmap as svg or png
+* Export Heatmap as image
 * Currently supported layouts are: *Qwertz* and *Qwerty*
 * Save input data periodically and after program exit
 
@@ -19,8 +19,8 @@ Small open source utility program to record keyboard usage in multiple applicati
 keyboard layouts are modified versions from Wikimedia 
 
 ## Issues
-* Only todays statistics are shown
 * Statistics are in plain text and not encrypted on disk
+* Year / Month statistics do not work
 
 ## Dependencies
 * **JNA** 4.5.1 
