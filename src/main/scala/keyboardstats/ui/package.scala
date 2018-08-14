@@ -1,6 +1,6 @@
 package keyboardstats
 
-import com.jfoenix.controls.JFXButton
+import com.jfoenix.controls.{JFXButton, JFXSnackbar}
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject
 import de.jensd.fx.glyphs.materialicons.MaterialIcon
 import keyboardstats.ui.Defaults.TOOLTIP_DELAY
@@ -9,7 +9,7 @@ import scalafx.beans.property.ObjectProperty
 import scalafx.scene.control.Tooltip
 
 import scala.collection.concurrent.TrieMap
-import scala.util.Try
+import scala.language.implicitConversions
 
 /**
   * Created by: 
@@ -18,6 +18,11 @@ import scala.util.Try
   * @version 16.07.2018
   */
 package object ui {
+
+  case class SnackbarEvent(message: String, actionText: String = null, timeout: Long = 3000)
+  implicit def convertSnackbarEventToJFXSnackbarEvent(event: SnackbarEvent): JFXSnackbar.SnackbarEvent =
+    new JFXSnackbar.SnackbarEvent(event.message, event.actionText, event.timeout, false, null)
+
 
   class KeyDataProperty(keyCodeValue: Int, backend: TrieMap[Int, Long]) extends RecursiveTreeObject[KeyDataProperty] {
     val keyCode = ObjectProperty(keyCodeValue)

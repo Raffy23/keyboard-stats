@@ -73,7 +73,7 @@ import scalafx.scene.Node
   dateStart.setOnAction((_) => {
     if (dateStart.getValue.isAfter(dateEnd.getValue)) {
       dateEnd.setValue(dateStart.getValue)
-      toaster(new SnackbarEvent("error.start_date_before_end_date", null, 1500, false, null))
+      toaster(SnackbarEvent(message = "error.start_date_before_end_date".localize, timeout = 1500))
     }
 
     updateDataView(updateApps = true)
@@ -81,7 +81,7 @@ import scalafx.scene.Node
   dateEnd.setOnAction((_) => {
     if (dateEnd.getValue.isBefore(dateStart.getValue)) {
       dateStart.setValue(dateEnd.getValue)
-      toaster(new SnackbarEvent("error.end_date_after_start_date", null, 1500, false, null))
+      toaster(SnackbarEvent(message ="error.end_date_after_start_date".localize, timeout = 1500))
     }
 
     updateDataView(updateApps = true)
@@ -121,7 +121,7 @@ import scalafx.scene.Node
   toggleKeyboard.setOnAction((_) => {
     InputGatherer.enabled.set(toggleKeyboard.isSelected)
 
-    toaster(new SnackbarEvent(s"snackbar.${if (toggleKeyboard.isSelected) "enabled" else "disabled" }_recording".localize))
+    toaster(SnackbarEvent(s"snackbar.${if (toggleKeyboard.isSelected) "enabled" else "disabled" }_recording".localize))
   })
 
   def shutdownBackgroundTasks(): Unit = {
@@ -138,7 +138,7 @@ import scalafx.scene.Node
 
   def onTabShow(): Unit = {
     if (!InputGatherer.enabled.get()) {
-      toaster(new SnackbarEvent("snackbar.disabled_recording".localize))
+      toaster(SnackbarEvent(message = "snackbar.disabled_recording".localize))
     }
   }
 
